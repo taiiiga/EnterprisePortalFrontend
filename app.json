@@ -12,6 +12,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "plugins": ["@logrocket/react-native"]
   }
 }

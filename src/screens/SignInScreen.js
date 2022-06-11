@@ -1,21 +1,26 @@
-import {TextInput, View, Text} from "react-native";
-import { StyleSheet } from 'react-native';
+import {TextInput, View, Text, Button, Pressable} from "react-native";
 import React from "react";
 import {AuthContext} from "../../App";
 import {t} from "react-native-tailwindcss";
+import tw, {useAppColorScheme} from "twrnc";
+import {recoverPassword} from "../services/recoverPassword";
 
 export default function SignInScreen() {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
     const { signIn } = React.useContext(AuthContext);
 
+    const [buttonStyle, setButtonStyle] = React.useState(style.button);
+
     return (
-        <View style={[t.hFull, t.itemsCenter, t.p8, t.pT40]}>
-            <Text style={[t.fontBold, t.text4xl]}>
-                Авторизация
-            </Text>
+        <View style={tw`bg-white dark:bg-gray-900 flex justify-center h-screen p-4`}>
+            <View style={tw`items-center text-center`}>
+                <Text style={tw`text-4xl font-bold dark:text-white text-center`}>
+                    Корпоративный портал
+                </Text>
+            </View>
             <TextInput
-                style={[t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6, t.border, t.textIndigo600, t.p2, t.textXl]}
+                style={tw`w-full py-2 items-center, rounded mt-6 border dark:text-white p-2 text-xl dark:border-white`}
                 placeholder="Ваш логин"
                 value={username}
                 placeholderTextColor="gray"
@@ -23,19 +28,27 @@ export default function SignInScreen() {
                 onChangeText={setUsername}
             />
             <TextInput
-                style={[t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6, t.border, t.textIndigo600, t.p2, t.textXl]}
+                style={tw`w-full py-2 items-center, rounded mt-6 border dark:text-white p-2 text-xl dark:border-white`}
                 placeholder="Ваш пароль"
                 value={password}
                 onChangeText={setPassword}
                 placeholderTextColor="gray"
                 secureTextEntry
             />
-            <View style={[t.bgIndigo600, t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6]}>
-                <Text style={[t.textWhite, t.fontMedium, t.text2xl]}
-                      onPress={() => signIn({ username, password })}>
-                    Войти
-                </Text>
-            </View>
+            <Pressable style={buttonStyle}
+                       onPress={() => signIn({ username, password })}
+                       onPressIn={() => setButtonStyle(style.buttonPressIn)}
+                       onPressOut={() => setButtonStyle(style.buttonPressOut)}
+                       >
+                <Text style={[t.textWhite, t.fontMedium, t.text2xl]} autoFocus={true}>Войти</Text>
+            </Pressable>
+            <Text style={tw`underline mt-6 dark:text-white text-center`} onPress={() => recoverPassword({ email })}>Восстановить пароль</Text>
         </View>
     );
+}
+
+const style = {
+    button: [t.bgIndigo600, t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6],
+    buttonPressIn: [t.bgIndigo400, t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6],
+    buttonPressOut: [t.bgIndigo500, t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6]
 }

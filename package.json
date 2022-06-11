@@ -7,9 +7,12 @@
     "android": "expo start --android",
     "web": "expo start --web",
     "eject": "expo eject",
-    "ios": "react-native run-ios"
+    "ios": "react-native run-ios",
+    "build:tailwind": "tailwindcss --input input.css --output tailwind.css --no-autoprefixer && tailwind-rn",
+    "dev:tailwind": "concurrently \"tailwindcss --input input.css --output tailwind.css --no-autoprefixer --watch\" \"tailwind-rn --watch\""
   },
   "dependencies": {
+    "@logrocket/react-native": "^1.4.0",
     "@react-native-community/cli": "^8.0.2",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
@@ -17,18 +20,29 @@
     "expo": "~44.0.0",
     "expo-secure-store": "~11.1.0",
     "expo-status-bar": "~1.2.0",
+    "logrocket": "^3.0.0",
+    "moment": "^2.29.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
+    "react-native-calendar-strip": "^2.2.6",
+    "react-native-calendars": "^1.1284.0",
     "react-native-eject": "^0.1.2",
     "react-native-gesture-handler": "~2.1.0",
+    "react-native-paper": "^4.12.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-tailwindcss": "^1.1.11",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "tailwind-rn": "^4.2.0",
+    "twrnc": "^3.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "concurrently": "^7.2.1",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.0.24",
+    "tailwindcss-textshadow": "^2.1.3"
   },
   "private": true
 }
