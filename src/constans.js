@@ -1,6 +1,6 @@
 import {t} from "react-native-tailwindcss";
 
-const catchError = (error) => {
+export const catchError = (error) => {
     if (error.response) {
         console.log(error.response);
         console.log(error.response.data);
@@ -14,7 +14,7 @@ const catchError = (error) => {
     }
 };
 
-const style = {
+export const style = {
     button: [t.bgIndigo600, t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6],
     buttonPressIn: [t.bgIndigo400, t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6],
     buttonPressOut: [t.bgIndigo500, t.wFull, t.pY2, t.itemsCenter, t.rounded, t.mT6]

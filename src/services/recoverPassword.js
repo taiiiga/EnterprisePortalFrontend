@@ -1,6 +1,7 @@
 import axios from "axios";
 import {apiUrl} from "../networking/ListOfUrl";
 import * as SecureStore from "expo-secure-store";
+import {catchError} from "../constans";
 
 export const recoverPassword = async (email) => {
     await axios.post(apiUrl + "Account/RecoverPassword", {
