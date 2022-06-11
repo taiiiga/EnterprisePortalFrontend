@@ -8,18 +8,19 @@ import {AuthContext} from "../../App";
 export default function CalendarScreen() {
     const { signOut } = React.useContext(AuthContext);
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
-    const [taskStyle, setTaskStyle] = React.useState(style.task);
+    const [taskStyle, setTaskStyle] = React.useState(style.button);
 
     return (
         <View style={styles.container}>
             <CalendarStrip
                 scrollable
-                style={{height:90, paddingTop: 20, paddingBottom: 10}}
-                calendarColor={'#3343CE'}
-                calendarHeaderStyle={{color: 'white'}}
-                dateNumberStyle={{color: 'white'}}
-                dateNameStyle={{color: 'white'}}
+                style={{height:90, paddingTop: 10, paddingBottom: 10}}
+                calendarColor={'white'}
+                calendarHeaderStyle={{color: 'black'}}
+                dateNumberStyle={{color: 'black'}}
+                dateNameStyle={{color: 'black'}}
                 iconContainer={{flex: 0.1}}
+                highlightDateNumberStyle={{color: '#5a67d8'}}
                 locale={{
                     name: 'ru',
                     config: {
@@ -81,13 +82,6 @@ export default function CalendarScreen() {
                     <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Задачка</Text>
                 </Pressable>
             </ScrollView>
-            <View style={tw`p-5 w-full mt-0`}>
-                <Pressable style={buttonStyle} onPress={signOut}
-                           onPressIn={() => setButtonStyle(style.buttonPressIn)}
-                           onPressOut={() => setButtonStyle(style.button)}>
-                    <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Выйти</Text>
-                </Pressable>
-            </View>
         </View>
     );
 }
@@ -98,6 +92,5 @@ const styles = StyleSheet.create({
 
 const style = {
     button: tw`w-full h-30 rounded bg-slate-800 items-center flex justify-center mt-5`,
-    buttonPressIn: tw`w-full h-30 rounded bg-emerald-400 items-center flex justify-center mt-5`,
-    task: tw`bg-indigo-500 h-50`,
+    buttonPressIn: tw`w-full h-30 rounded bg-indigo-600 items-center flex justify-center mt-5`,
 }
