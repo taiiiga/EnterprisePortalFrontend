@@ -6,7 +6,7 @@ import tw  from 'twrnc';
 import { ImageBackground, StyleSheet} from "react-native";
 
 
-export default function AdminScreen() {
+export default function AdminScreen({navigation}) {
     const { signOut } = React.useContext(AuthContext);
     const [roleButtonStyle, setRoleButtonStyle] = React.useState(style.button);
     const [employeeButtonStyle, setEmployeeButtonStyle] = React.useState(style.button);
@@ -15,7 +15,9 @@ export default function AdminScreen() {
     const [taskButtonStyle, setTaskButtonStyle] = React.useState(style.button);
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
 
-    const roleSettings = () => {};
+    const roleSettings = () => {
+        navigation.navigate('ListScreen')
+    };
     const employeeSettings = () => {};
     const departmentSettings = () => {};
     const projectSettings = () => {};
