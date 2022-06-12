@@ -8,6 +8,8 @@ import {ProfileScreen} from "../screens/ProfileScreen";
 import {DepartmentScreen} from "../screens/DepartmentScreen";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Button} from "react-native";
+import ListScreen from "../screens/ListScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +42,7 @@ export const TabNavigator = () => {
             <Tab.Screen name="Календарь" component={CalendarScreen} />
             <Tab.Screen name="Помощь" component={RequestScreen} />
             <Tab.Screen name="Главная" component={HomeScreen} />
-            <Tab.Screen name="Отдел" component={DepartmentScreen} />
+            <Tab.Screen name="Отдел" component={ListScreen} />
             <Tab.Screen name="Профиль" component={ProfileScreen} />
         </Tab.Navigator>
     );

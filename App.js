@@ -12,12 +12,9 @@ import AdminScreen from "./src/screens/AdminScreen";
 import {TailwindProvider} from 'tailwind-rn';
 import utilities from './tailwind.json';
 import tw, {useDeviceContext} from "twrnc";
-import LogRocket from '@logrocket/react-native';
-import CalendarScreen from "./src/screens/CalendarScreen";
 import 'moment';
 import 'moment/locale/ru';
 import {TabNavigator} from "./src/navigation/TabNavigator";
-import ListScreen from "./src/screens/ListScreen";  // language must match config
 export const AuthContext = React.createContext();
 
 const Stack = createStackNavigator();
@@ -48,7 +45,6 @@ export default function App({ navigation }) {
         };
 
         bootstrapAsync();
-        LogRocket.init('7fecav/iuo');
     }, []);
 
     const authContext = React.useMemo(
@@ -108,7 +104,7 @@ export default function App({ navigation }) {
                             />
                         ) : (
                             state.admin
-                                ? <Stack.Screen name="Администрирование" component={ListScreen} />
+                                ? <Stack.Screen name="Администрирование" component={AdminScreen} />
                                 : <Stack.Screen name="Main" component={TabNavigator} options={{headerShown: false}}/>
                         )}
                     </Stack.Navigator>
