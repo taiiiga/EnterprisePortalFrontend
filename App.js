@@ -15,6 +15,10 @@ import tw, {useDeviceContext} from "twrnc";
 import 'moment';
 import 'moment/locale/ru';
 import {TabNavigator} from "./src/navigation/TabNavigator";
+import { AsyncStorage } from 'react-native';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...', 'Console Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 export const AuthContext = React.createContext();
 
 const Stack = createStackNavigator();
@@ -61,8 +65,11 @@ export default function App({ navigation }) {
                 })
                 .then(response => {
                     const token = response.data.access_token;
+                    const login = response.data.username;
                     const admin = response.data.admin;
                     SecureStore.setItemAsync("userToken", token);
+                    SecureStore.setItemAsync("login", login);
+                    AsyncStorage.setItem('login', login);
                     dispatch({ type: 'SIGN_IN', token: token, admin: admin });
                 })
                 .catch(function (error) {
@@ -103,7 +110,7 @@ export default function App({ navigation }) {
                                 }}
                             />
                         ) : (
-                            state.admin
+                            state.admin === "Администратор"
                                 ? <Stack.Screen name="Администрирование" component={AdminScreen} />
                                 : <Stack.Screen name="Main" component={TabNavigator} options={{headerShown: false}}/>
                         )}

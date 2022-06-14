@@ -1,21 +1,20 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import CalendarScreen from "../screens/CalendarScreen";
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {RequestScreen} from "../screens/RequestScreen";
 import HomeScreen from "../screens/HomeScreen";
-import {ProfileScreen} from "../screens/ProfileScreen";
-import {DepartmentScreen} from "../screens/DepartmentScreen";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Button} from "react-native";
-import ListScreen from "../screens/ListScreen";
+import {DepartmentScreen} from "../screens/DepartmentScreen";
+import {ProfileStackScreen} from "./ProfileStackScreen";
+import {CalendarStackScreen} from "./CalendarStackScreen";
+import {NewsStackScreen} from "./NewsStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
 export const TabNavigator = () => {
     return (
         <Tab.Navigator
+            initialRouteName="Главная"
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
@@ -39,11 +38,11 @@ export const TabNavigator = () => {
                 tabBarInactiveTintColor: 'gray',
             })}
         >
-            <Tab.Screen name="Календарь" component={CalendarScreen} />
+            <Tab.Screen name="Календарь" component={CalendarStackScreen} options={{headerShown: false}}/>
             <Tab.Screen name="Помощь" component={RequestScreen} />
-            <Tab.Screen name="Главная" component={HomeScreen} />
-            <Tab.Screen name="Отдел" component={ListScreen} />
-            <Tab.Screen name="Профиль" component={ProfileScreen} />
+            <Tab.Screen name="Главная" component={NewsStackScreen} options={{headerShown: false}}/>
+            <Tab.Screen name="Отдел" component={DepartmentScreen} />
+            <Tab.Screen name="Профиль" component={ProfileStackScreen} options={{headerShown: false}}/>
         </Tab.Navigator>
     );
 };

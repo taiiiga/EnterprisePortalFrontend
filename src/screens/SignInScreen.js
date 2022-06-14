@@ -4,6 +4,7 @@ import {AuthContext} from "../../App";
 import {t} from "react-native-tailwindcss";
 import tw, {useAppColorScheme} from "twrnc";
 import {recoverPassword} from "../services/recoverPassword";
+import { AsyncStorage } from 'react-native';
 
 export default function SignInScreen() {
     const [username, setUsername] = React.useState('');

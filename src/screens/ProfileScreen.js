@@ -1,9 +1,54 @@
 import React from "react";
 import {Avatar, Button, Icon} from 'react-native-elements';
-import {View, Text, ScrollView } from "react-native";
+import {View, Text, ScrollView, Pressable} from "react-native";
 import tw from "twrnc";
+import {t} from "react-native-tailwindcss";
+import {AuthContext} from "../../App";
+import * as SecureStore from "expo-secure-store";
+import axios from "axios";
+import {apiUrl} from "../networking/ListOfUrl";
+import {catchError} from "../constans";
+import {useFocusEffect} from "@react-navigation/native";
 
 export const ProfileScreen = ({navigation}) => {
+    const { signOut } = React.useContext(AuthContext);
+    const [buttonStyle, setButtonStyle] = React.useState(style.button);
+    const [person, setPerson] = React.useState({});
+
+    React.useEffect(() => {
+        const bootstrapAsync = async () => {
+            const token = await SecureStore.getItemAsync("userToken");
+            const login = await SecureStore.getItemAsync("login");
+            await axios.get(apiUrl + "Account/Get", {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                params: {
+                    login: login
+                },
+            })
+            .then(response => {
+                setPerson(response.data);
+            })
+            .catch(function (error) {
+                if (error.response.status === 401) {
+                    alert("Войдите еще раз в аккаунт, пожалуйста!!!");
+                    signOut();
+                }
+                catchError(error);
+            });
+        };
+        const willFocusSubscription = navigation.addListener('focus', () => {
+            bootstrapAsync();
+        });
+
+        bootstrapAsync();
+        return willFocusSubscription;
+    }, []);
+
+
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
@@ -17,6 +62,7 @@ export const ProfileScreen = ({navigation}) => {
                     }
                     type="clear"
                     title=""
+                    onPress={() => navigation.navigate('Редактировать профиль')}
                 />
             )
         });
@@ -24,7 +70,7 @@ export const ProfileScreen = ({navigation}) => {
 
     return (
         <ScrollView style={tw`h-full w-full bg-white`}>
-            <View style={tw`bg-indigo-500 w-full items-center pt-5 pb-5`}>
+            <View style={tw`bg-slate-800 w-full items-center pt-5 pb-5 text-white`}>
                 <Avatar
                     size="xlarge"
                     rounded
@@ -36,24 +82,33 @@ export const ProfileScreen = ({navigation}) => {
                     }}
                     showEditButton
                 />
-                <Text style={tw`text-xl font-bold mt-2`}>Искандер Хисамов Равилевич</Text>
-                <Text style={tw`text-lg`}>ЖКХиСЗ</Text>
-                <Text style={tw`text-md`}>Проект "Биллинг"</Text>
+                <Text style={tw`text-xl font-bold mt-2 text-white`}>{person.fullName}</Text>
+                <Text style={tw`text-lg text-white`}>{person.groupName}</Text>
+                <Text style={tw`text-md text-white`}>{person.projectName}</Text>
             </View>
             <View style={tw`bg-slate-500 rounded mt-5 p-5`}>
-                <Text style={tw`text-lg font-bold`}>Место работы: <Text style={tw`text-lg font-light`}>АО БАРС Груп</Text></Text>
-                <Text style={tw`text-lg font-bold`}>Должность: <Text style={tw`text-lg font-light`}>Младший разработчик</Text></Text>
-                <Text style={tw`text-lg font-bold`}>Вид работы: <Text style={tw`text-lg font-light`}>Основная работа</Text></Text>
+                <Text style={tw`text-lg font-bold`}>Должность: <Text style={tw`text-lg font-light`}>{person.positionName}</Text></Text>
+                <Text style={tw`text-lg font-bold`}>Вид работы: <Text style={tw`text-lg font-light`}>{person.workTypeName}</Text></Text>
             </View>
-            <View style={tw`bg-pink-500 rounded mt-5 p-5`}>
-                <Text style={tw`text-lg font-bold`}>Пол: <Text style={tw`text-lg font-light`}>Мужской</Text></Text>
-                <Text style={tw`text-lg font-bold`}>День рождение: <Text style={tw`text-lg font-light`}>08.04.2000</Text></Text>
+            <View style={tw`bg-slate-500 rounded mt-5 p-5`}>
+                <Text style={tw`text-lg font-bold`}>Пол: <Text style={tw`text-lg font-light`}>{person.sex}</Text></Text>
+                <Text style={tw`text-lg font-bold`}>День рождение: <Text style={tw`text-lg font-light`}>{person.dateOfBirth}</Text></Text>
             </View>
-            <View style={tw`bg-green-500 rounded mt-5 p-5`}>
-                <Text style={tw`text-lg font-bold`}>Мобильный телефон: <Text style={tw`text-lg font-light`}>+79534075488</Text></Text>
-                <Text style={tw`text-lg font-bold`}>E-mail: <Text style={tw`text-lg font-light`}>iskanderkhisamov@gmail.com</Text></Text>
-                <Text style={tw`text-lg font-bold`}>Telegram: <Text style={tw`text-lg font-light`}>@taiiiga</Text></Text>
+            <View style={tw`bg-slate-500 rounded mt-5 p-5`}>
+                <Text style={tw`text-lg font-bold`}>Мобильный телефон: <Text style={tw`text-lg font-light`}>{person.phone}</Text></Text>
+                <Text style={tw`text-lg font-bold`}>E-mail: <Text style={tw`text-lg font-light`}>{person.email}</Text></Text>
+                <Text style={tw`text-lg font-bold`}>Telegram: <Text style={tw`text-lg font-light`}>{person.telegram}</Text></Text>
             </View>
+            <Pressable style={buttonStyle} onPress={signOut}
+                       onPressIn={() => setButtonStyle(style.buttonPressIn)}
+                       onPressOut={() => setButtonStyle(style.button)}>
+                <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Выйти</Text>
+            </Pressable>
         </ScrollView>
     );
 };
+
+const style = {
+    button: tw`w-full h-30 rounded bg-slate-800 items-center flex justify-center mt-5`,
+    buttonPressIn: tw`w-full h-30 rounded bg-emerald-400 items-center flex justify-center mt-5`
+}

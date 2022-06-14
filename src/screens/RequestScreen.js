@@ -1,24 +1,42 @@
-import {View, Text, StyleSheet, ScrollView, TextInput} from "react-native";
+import {View, Text, StyleSheet, ScrollView, TextInput, Pressable} from "react-native";
 import {Dropdown} from "react-native-element-dropdown";
 import tw from "twrnc";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {t} from "react-native-tailwindcss";
+import * as SecureStore from "expo-secure-store";
+import axios from "axios";
+import {apiUrl} from "../networking/ListOfUrl";
+import {catchError} from "../constans";
 
-export const RequestScreen = () => {
-    const [text, onChangeText] = useState("Useless Text");
-    const [number, onChangeNumber] = useState(null);
+export const RequestScreen = ({navigation}) => {
+    const [text, setText] = useState("");
+    const [buttonStyle, setButtonStyle] = useState(style.button);
+    const [data, setData] = useState([]);
 
-    const data = [
-        { label: 'Причина 1', value: '1' },
-        { label: 'Причина 2', value: '2' },
-        { label: 'Причина 3', value: '3' },
-        { label: 'Причина 4', value: '4' },
-        { label: 'Причина 5', value: '5' },
-        { label: 'Причина 6', value: '6' },
-        { label: 'Причина 7', value: '7' },
-        { label: 'Причина 8', value: '8' },
-    ];
+    useEffect(() => {
+        const bootstrapAsync = async () => {
+            await axios.get(apiUrl + "Problem/List", {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+            })
+            .then(response => {
+                setData(response.data);
+            })
+            .catch(function (error) {
+                catchError(error);
+            });
+        };
+        const willFocusSubscription = navigation.addListener('focus', () => {
+            bootstrapAsync();
+        });
 
-    const [value, setValue] = useState(null);
+        bootstrapAsync();
+        return willFocusSubscription;
+    }, []);
+
+    const [value, setValue] = useState('');
     const [isFocus, setIsFocus] = useState(false);
 
     const renderLabel = () => {
@@ -32,8 +50,34 @@ export const RequestScreen = () => {
         return null;
     };
 
+    const sendRequest = async () => {
+        const login = await SecureStore.getItemAsync("login");
+        if (!value) {
+            alert("Выберите причину заявки!");
+            return;
+        }
+        axios.post(apiUrl + "Request/Create", {
+            login: login,
+            problemId: value,
+            commentary: text,
+        }, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+        })
+            .then(response => {
+                alert("Запрос успешно отправлен!");
+                setText("");
+            })
+            .catch(function (error) {
+                alert("Запрос успешно отправлен!");
+                setText("");
+            });
+    };
+
     return (
-        <View>
+        <View style={tw`bg-white`}>
             <View style={styles.container}>
                 {renderLabel()}
                 <Dropdown
@@ -45,37 +89,41 @@ export const RequestScreen = () => {
                     data={data}
                     search
                     maxHeight={300}
-                    labelField="label"
-                    valueField="value"
+                    labelField="text"
+                    valueField="id"
                     placeholder={!isFocus ? 'Выберите причину заявки' : '...'}
                     searchPlaceholder="Поиск..."
                     value={value}
                     onFocus={() => setIsFocus(true)}
                     onBlur={() => setIsFocus(false)}
                     onChange={item => {
-                        setValue(item.value);
+                        setValue(item.id);
                         setIsFocus(false);
                     }}
                 />
             </View>
-            <ScrollView style={tw`w-full bg-white h-full`}>
-                <Text>text</Text>
+            <ScrollView style={tw`bg-white p-3 rounded border mx-5 mb-5 h-50`}>
                 <TextInput
                     style={styles.input}
-                    onChangeText={onChangeText}
+                    onChangeText={setText}
                     value={text}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={onChangeNumber}
-                    value={number}
-                    placeholder="useless placeholder"
-                    keyboardType="numeric"
+                    placeholder="Комментарий..."
+                    placeholderTextColor={'gray'}
                 />
             </ScrollView>
+            <Pressable style={buttonStyle} onPress={sendRequest}
+                       onPressIn={() => setButtonStyle(style.buttonPressIn)}
+                       onPressOut={() => setButtonStyle(style.button)}>
+                <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Отправить</Text>
+            </Pressable>
         </View>
     );
 };
+
+const style = {
+    button: tw`h-10 rounded bg-slate-800 items-center flex justify-center mx-5`,
+    buttonPressIn: tw`h-10 rounded bg-emerald-400 items-center flex justify-center mx-5`
+}
 
 const styles = StyleSheet.create({
     container: {
