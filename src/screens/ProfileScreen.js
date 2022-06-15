@@ -83,7 +83,6 @@ export const ProfileScreen = ({navigation}) => {
                     showEditButton
                 />
                 <Text style={tw`text-xl font-bold mt-2 text-white`}>{person.fullName}</Text>
-                <Text style={tw`text-lg text-white`}>{person.groupName}</Text>
                 <Text style={tw`text-md text-white`}>{person.projectName}</Text>
             </View>
             <View style={tw`bg-slate-500 rounded mt-5 p-5`}>

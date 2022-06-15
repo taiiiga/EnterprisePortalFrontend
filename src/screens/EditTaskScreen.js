@@ -1,40 +1,32 @@
 import React from "react";
-import {Avatar, Icon} from 'react-native-elements';
 import {View, Text, ScrollView, Pressable, TextInput, StyleSheet, Switch} from "react-native";
 import tw from "twrnc";
 import {t} from "react-native-tailwindcss";
-import {AuthContext} from "../../App";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import {apiUrl} from "../networking/ListOfUrl";
 import {catchError} from "../constans";
 import {Dropdown} from "react-native-element-dropdown";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Image, Platform } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 
 export const EditTaskScreen = ({ route, navigation }) => {
     const { item } = route.params;
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
     const [name, setName] = React.useState(item.name);
     const [text, setText] = React.useState(item.text);
-    const [employer, setEmployer] = React.useState(item.employeeName);
+    const [employeeId, setEmployeeId] = React.useState(item.employeeId);
+    const [projectId, setProjectId] = React.useState(item.projectId);
     const [status, setStatus] = React.useState(item.taskTypeId);
-    const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
+    const [dateOfBirth, setDateOfBirth] = React.useState(new Date(item.deadline.split('.')[2], item.deadline.split('.')[1], item.deadline.split('.')[0]));
     const [isFocus, setIsFocus] = React.useState(false);
-    const [telegram, setTelegram] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [phone, setPhone] = React.useState("");
+    const [isFocus2, setIsFocus2] = React.useState(false);
+    const [employerData, setEmployerData] = React.useState([]);
+    const [statusData, setStatusData] = React.useState([]);
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || dateOfBirth;
         setDateOfBirth(currentDate);
     };
-
-    const data = [
-        { label: 'Мужской', value: true },
-        { label: 'Женский', value: false },
-    ];
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
@@ -42,59 +34,88 @@ export const EditTaskScreen = ({ route, navigation }) => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
                 },
                 params: {
-                    login: login
+                    id: item.id
                 },
             })
-                .then(response => {
-                    const person = response.data;
-                    setSecondName(person.fullName.split(' ')[0]);
-                    setFirstName(person.fullName.split(' ')[1]);
-                    setFatherName(person.fullName.split(' ')[2]);
-                    setSex(person.sex === "Мужской");
-                    const date = person.dateOfBirth.split('.');
-                    setDateOfBirth(new Date(date[2], date[1], date[0]));
-                    setPhone(person.phone);
-                    setEmail(person.email);
-                    setTelegram(person.telegram);
-                })
-                .catch(function (error) {
-                    if (error.response.status === 401) {
-                        alert("Войдите еще раз в аккаунт, пожалуйста!");
-                    }
-                    catchError(error);
-                });
+            .then(response => {
+                const task = response.data;
+                setName(task.name);
+                setText(task.text);
+                setEmployeeId(task.employeeId);
+                setProjectId(task.projectId);
+                setStatus(task.taskTypeId);
+                setDateOfBirth(new Date(item.deadline.split('.')[2], item.deadline.split('.')[1], item.deadline.split('.')[0]));
+            })
+            .catch(function (error) {
+                if (error.response.status === 401) {
+                    alert("Войдите еще раз в аккаунт, пожалуйста!");
+                }
+                catchError(error);
+            });
+            await getEmployers();
+            await getStatuses();
         };
 
         bootstrapAsync();
     }, []);
 
     const saveTask = async () => {
-        const login = await SecureStore.getItemAsync("login");
         await axios.post(apiUrl + "Task/Update", {
-            login: login,
-            firstName: firstName,
-            secondName: secondName,
-            fatherName: fatherName,
-            sex: sex,
-            dateOfBirth: dateOfBirth,
-            phone: phone,
-            email: email,
-            telegram: telegram
+            id: item.id,
+            name: name,
+            text: text,
+            employeeId: employeeId,
+            employeeName: '',
+            projectId: projectId,
+            projectName: '',
+            taskTypeId: status,
+            taskTypeName: '',
+            deadline: dateOfBirth.toLocaleDateString('ru', { year:"numeric", month:"numeric", day:"numeric"}) ,
         }, {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             },
         })
-            .then(response => {
-                navigation.goBack();
-            })
-            .catch(function (error) {
-                catchError(error);
-            });
+        .then(response => {
+            navigation.goBack();
+        })
+        .catch(function (error) {
+            alert(error);
+            catchError(error);
+        });
+    };
+
+    const getEmployers = async () => {
+        await axios.get(apiUrl + "Account/List", {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+        })
+        .then(response => {
+            setEmployerData(response.data);
+        })
+        .catch(function (error) {
+            catchError(error);
+        });
+    };
+
+    const getStatuses = async () => {
+        await axios.get(apiUrl + "TaskType/List", {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+        })
+        .then(response => {
+            setStatusData(response.data);
+        })
+        .catch(function (error) {
+            catchError(error);
+        });
     };
 
     return (
@@ -102,55 +123,55 @@ export const EditTaskScreen = ({ route, navigation }) => {
             <Text style={tw`mt-2 font-bold mb-1`}>Название</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setFirstName}
-                value={firstName}
+                onChangeText={setName}
+                value={name}
                 placeholder="Иван"
                 placeholderTextColor={'gray'}
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Текст задачи</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setSecondName}
-                value={secondName}
+                onChangeText={setText}
+                value={text}
                 placeholder="Иванов"
                 placeholderTextColor={'gray'}
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Исполняющий сотрудник</Text>
             <Dropdown
                 style={[styles.dropdown, isFocus && { borderColor: 'blue' }, styles.input]}
-                data={data}
+                data={employerData}
                 maxHeight={300}
-                labelField="label"
-                valueField="value"
+                labelField="firstName"
+                valueField="id"
                 placeholder={!isFocus ? 'Выберите сотрудника' : '...'}
-                value={sex}
+                value={employeeId}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
-                    setSex(item.value);
+                    setEmployeeId(item.id);
                     setIsFocus(false);
                 }}
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Статус задачи</Text>
             <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }, styles.input]}
-                data={data}
+                style={[styles.dropdown, isFocus2 && { borderColor: 'blue' }, styles.input]}
+                data={statusData}
                 maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={!isFocus ? 'Выберите статус' : '...'}
-                value={sex}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
+                labelField="name"
+                valueField="id"
+                placeholder={!isFocus2 ? 'Выберите статус' : '...'}
+                value={status}
+                onFocus={() => setIsFocus2(true)}
+                onBlur={() => setIsFocus2(false)}
                 onChange={item => {
-                    setSex(item.value);
-                    setIsFocus(false);
+                    setStatus(item.id);
+                    setIsFocus2(false);
                 }}
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Крайний срок</Text>
             <DateTimePicker
                 style={tw`h-10 w-full`}
-                value={ dateOfBirth }
+                value={dateOfBirth}
                 mode='date'
                 display='calendar'
                 onChange={onChange} />

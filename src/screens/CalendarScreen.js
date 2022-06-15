@@ -126,9 +126,31 @@ export default function CalendarScreen({navigation}) {
             <CalendarStrip
                 selectedDate={selectedDate}
                 scrollToOnSetSelectedDate={true}
-                onDateSelected={(date) => {
-                    setSelectedDate(date);
-                    getTasks();
+                onDateSelected={async (date) => {
+                    const prefValue = selectedDate;
+                    if (date) setSelectedDate(date);
+                    const login = await SecureStore.getItemAsync("login");
+                    await axios.get(apiUrl + "Account/GetTasks", {
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        params: {
+                            login: login,
+                            projectId: value,
+                            selectedDate: selectedDate === prefValue ? date : selectedDate
+                        },
+                    })
+                        .then(response => {
+                            setTasks(response.data == null ? [] : response.data);
+                        })
+                        .catch(function (error) {
+                            if (error.response.status === 401) {
+                                alert("Войдите еще раз в аккаунт, пожалуйста!!!");
+                                signOut();
+                            }
+                            catchError(error);
+                        });
                 }}
                 scrollable
                 style={{height:90, paddingTop: 10, paddingBottom: 10}}
