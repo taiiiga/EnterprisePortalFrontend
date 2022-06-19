@@ -111,8 +111,10 @@ export default function ProjectReadScreen({route, navigation}) {
     return (
         <View key={model.id} style={style.elements}>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID: {model.id}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID менеджера: {model.principalId}</Text>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID менеджера: {model.managerId}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Имя менеджера: {model.managerName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Цель: {model.purpose}</Text>
         </View>
     );
 }

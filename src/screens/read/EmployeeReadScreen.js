@@ -29,7 +29,7 @@ export default function EmployeeReadScreen({route, navigation}) {
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
-            await axios.get(apiUrl + item + "/Get", {
+            await axios.get(apiUrl + item + "/GetById", {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
@@ -112,9 +112,17 @@ export default function EmployeeReadScreen({route, navigation}) {
         <View key={model.id} style={style.elements}>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID: {model.id}</Text>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>логин: {model.login}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>пароль: {model.password}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>аватар: {model.avatar}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>имя: {model.fullName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>название группы: {model.groupName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>название проекта: {model.projectName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>позиция: {model.positionName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>работа: {model.workTypeName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>пол: {model.sex}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>дата рождения: {model.dateOfBirth}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>телефон: {model.phone}</Text>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>email: {model.email}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID проекта: {model.projectId}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>telegram: {model.telegram}</Text>
         </View>
     );
 }

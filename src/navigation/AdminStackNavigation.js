@@ -28,9 +28,9 @@ export const AdminStackScreen = () => {
             <Stack.Screen name="Создание Role" component={RoleCreateScreen} />
             <Stack.Screen name="Изменение Role" component={RoleEditScreen} />
             <Stack.Screen name="Просмотр Role" component={RoleReadScreen} />
-            <Stack.Screen name="Создание Employee" component={EmployeeCreateScreen} />
-            <Stack.Screen name="Изменение Employee" component={EmployeeEditScreen} />
-            <Stack.Screen name="Просмотр Employee" component={EmployeeReadScreen} />
+            <Stack.Screen name="Создание Account" component={EmployeeCreateScreen} />
+            <Stack.Screen name="Изменение Account" component={EmployeeEditScreen} />
+            <Stack.Screen name="Просмотр Account" component={EmployeeReadScreen} />
             <Stack.Screen name="Создание Department" component={DepartmentCreateScreen} />
             <Stack.Screen name="Изменение Department" component={DepartmentEditScreen} />
             <Stack.Screen name="Просмотр Department" component={DepartmentReadScreen} />

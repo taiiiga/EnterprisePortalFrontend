@@ -36,7 +36,7 @@ export default function AdminScreen({navigation}) {
                 <Pressable style={employeeButtonStyle}
                            onPress={() =>
                                navigation.navigate('Общий список', {
-                                   model: "Employee"
+                                   model: "Account"
                                })
                            }
                            onPressIn={() => setEmployeeButtonStyle(style.buttonPressIn)}

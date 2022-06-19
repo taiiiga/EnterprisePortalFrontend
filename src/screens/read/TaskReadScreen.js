@@ -112,7 +112,14 @@ export default function TaskReadScreen({route, navigation}) {
         <View key={model.id} style={style.elements}>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID: {model.id}</Text>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID сотрудника: {model.employeeId}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Имя сотрудника: {model.employeeName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Id проекта: {model.projectId}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название проекта: {model.projectName}</Text>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Описание: {model.text}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID типа: {model.taskTypeId}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Тип: {model.taskTypeName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Дедлайн: {model.deadline}</Text>
         </View>
     );
 }
