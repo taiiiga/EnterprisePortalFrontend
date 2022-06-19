@@ -1,16 +1,15 @@
 import React from "react";
-import {View, Text, ScrollView, Pressable, TextInput, StyleSheet, Switch} from "react-native";
+import {Pressable, ScrollView, StyleSheet, Text, TextInput} from "react-native";
 import tw from "twrnc";
 import {t} from "react-native-tailwindcss";
-import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import {apiUrl} from "../networking/ListOfUrl";
 import {catchError} from "../constans";
 import {Dropdown} from "react-native-element-dropdown";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export const EditTaskScreen = ({ route, navigation }) => {
-    const { item } = route.params;
+export const EditTaskScreen = ({route, navigation}) => {
+    const {item} = route.params;
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
     const [name, setName] = React.useState(item.name);
     const [text, setText] = React.useState(item.text);
@@ -39,21 +38,21 @@ export const EditTaskScreen = ({ route, navigation }) => {
                     id: item.id
                 },
             })
-            .then(response => {
-                const task = response.data;
-                setName(task.name);
-                setText(task.text);
-                setEmployeeId(task.employeeId);
-                setProjectId(task.projectId);
-                setStatus(task.taskTypeId);
-                setDateOfBirth(new Date(item.deadline.split('.')[2], item.deadline.split('.')[1], item.deadline.split('.')[0]));
-            })
-            .catch(function (error) {
-                if (error.response.status === 401) {
-                    alert("Войдите еще раз в аккаунт, пожалуйста!");
-                }
-                catchError(error);
-            });
+                .then(response => {
+                    const task = response.data;
+                    setName(task.name);
+                    setText(task.text);
+                    setEmployeeId(task.employeeId);
+                    setProjectId(task.projectId);
+                    setStatus(task.taskTypeId);
+                    setDateOfBirth(new Date(item.deadline.split('.')[2], item.deadline.split('.')[1], item.deadline.split('.')[0]));
+                })
+                .catch(function (error) {
+                    if (error.response.status === 401) {
+                        alert("Войдите еще раз в аккаунт, пожалуйста!");
+                    }
+                    catchError(error);
+                });
             await getEmployers();
             await getStatuses();
         };
@@ -72,20 +71,20 @@ export const EditTaskScreen = ({ route, navigation }) => {
             projectName: '',
             taskTypeId: status,
             taskTypeName: '',
-            deadline: dateOfBirth.toLocaleDateString('ru', { year:"numeric", month:"numeric", day:"numeric"}) ,
+            deadline: dateOfBirth.toLocaleDateString('ru', {year: "numeric", month: "numeric", day: "numeric"}),
         }, {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             },
         })
-        .then(response => {
-            navigation.goBack();
-        })
-        .catch(function (error) {
-            alert(error);
-            catchError(error);
-        });
+            .then(response => {
+                navigation.goBack();
+            })
+            .catch(function (error) {
+                alert(error);
+                catchError(error);
+            });
     };
 
     const getEmployers = async () => {
@@ -95,12 +94,12 @@ export const EditTaskScreen = ({ route, navigation }) => {
                 "Content-Type": "application/json"
             },
         })
-        .then(response => {
-            setEmployerData(response.data);
-        })
-        .catch(function (error) {
-            catchError(error);
-        });
+            .then(response => {
+                setEmployerData(response.data);
+            })
+            .catch(function (error) {
+                catchError(error);
+            });
     };
 
     const getStatuses = async () => {
@@ -110,12 +109,12 @@ export const EditTaskScreen = ({ route, navigation }) => {
                 "Content-Type": "application/json"
             },
         })
-        .then(response => {
-            setStatusData(response.data);
-        })
-        .catch(function (error) {
-            catchError(error);
-        });
+            .then(response => {
+                setStatusData(response.data);
+            })
+            .catch(function (error) {
+                catchError(error);
+            });
     };
 
     return (
@@ -138,7 +137,7 @@ export const EditTaskScreen = ({ route, navigation }) => {
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Исполняющий сотрудник</Text>
             <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }, styles.input]}
+                style={[styles.dropdown, isFocus && {borderColor: 'blue'}, styles.input]}
                 data={employerData}
                 maxHeight={300}
                 labelField="firstName"
@@ -154,7 +153,7 @@ export const EditTaskScreen = ({ route, navigation }) => {
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Статус задачи</Text>
             <Dropdown
-                style={[styles.dropdown, isFocus2 && { borderColor: 'blue' }, styles.input]}
+                style={[styles.dropdown, isFocus2 && {borderColor: 'blue'}, styles.input]}
                 data={statusData}
                 maxHeight={300}
                 labelField="name"
@@ -174,7 +173,7 @@ export const EditTaskScreen = ({ route, navigation }) => {
                 value={dateOfBirth}
                 mode='date'
                 display='calendar'
-                onChange={onChange} />
+                onChange={onChange}/>
             <Pressable style={style.button} onPress={() => saveTask()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>
                 <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Сохранить</Text>

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import SignInScreen from "./src/screens/SignInScreen";
 import SplashScreen from "./src/screens/SplashScreen";
 import * as SecureStore from "expo-secure-store";
@@ -8,17 +8,16 @@ import {AuthReducer} from "./src/reducers/AuthReducer";
 import {apiUrl} from "./src/networking/ListOfUrl";
 import axios from "axios";
 import {recoverPassword} from "./src/services/recoverPassword";
-import AdminScreen from "./src/screens/AdminScreen";
 import {TailwindProvider} from 'tailwind-rn';
 import utilities from './tailwind.json';
 import tw, {useDeviceContext} from "twrnc";
 import 'moment';
 import 'moment/locale/ru';
 import {TabNavigator} from "./src/navigation/TabNavigator";
-import { AsyncStorage } from 'react-native';
-import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['Warning: ...', 'Console Warning: ...']); // Ignore log notification by message
-LogBox.ignoreAllLogs();//Ignore all log notifications
+import {AsyncStorage} from 'react-native';
+import {AdminStackScreen} from "./src/navigation/AdminStackNavigation";
+// LogBox.ignoreLogs(['Warning: ...', 'Console Warning: ...']); // Ignore log notification by message
+// LogBox.ignoreAllLogs();//Ignore all log notifications
 export const AuthContext = React.createContext();
 
 const Stack = createStackNavigator();
@@ -111,7 +110,7 @@ export default function App({ navigation }) {
                             />
                         ) : (
                             state.admin === "Администратор"
-                                ? <Stack.Screen name="Администрирование" component={AdminScreen} />
+                                ? <Stack.Screen name="Администрирование" component={AdminStackScreen} options={{headerShown: false}}/>
                                 : <Stack.Screen name="Main" component={TabNavigator} options={{headerShown: false}}/>
                         )}
                     </Stack.Navigator>
