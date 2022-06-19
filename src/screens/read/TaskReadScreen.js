@@ -111,6 +111,7 @@ export default function TaskReadScreen({route, navigation}) {
     return (
         <View key={model.id} style={style.elements}>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID: {model.id}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID сотрудника: {model.employeeId}</Text>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
         </View>
     );
