@@ -1,4 +1,4 @@
-import {View, Text, ScrollView, Pressable} from "react-native";
+import {Pressable, ScrollView, Text, View} from "react-native";
 import tw from "twrnc";
 import {t} from "react-native-tailwindcss";
 
@@ -23,7 +23,8 @@ export const DepartmentScreen = () => {
             <View style={tw`bg-slate-300 rounded p-5 mt-2`}>
                 <Text>-</Text>
             </View>
-            <Pressable style={tw`h-10 rounded bg-slate-800 items-center flex justify-center mt-2`} onPress={() => alert("Будет реализовано в будущих обновлениях!")}>
+            <Pressable style={tw`h-10 rounded bg-slate-800 items-center flex justify-center mt-2`}
+                       onPress={() => alert("Будет реализовано в будущих обновлениях!")}>
                 <Text style={[t.textWhite, t.textXl]}>Обзор отделов</Text>
             </Pressable>
         </ScrollView>

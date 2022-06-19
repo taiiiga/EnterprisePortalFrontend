@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ScrollView, TextInput, Pressable} from "react-native";
+import {Pressable, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
 import {Dropdown} from "react-native-element-dropdown";
 import tw from "twrnc";
 import {useEffect, useState} from "react";
@@ -21,12 +21,12 @@ export const RequestScreen = ({navigation}) => {
                     "Content-Type": "application/json"
                 },
             })
-            .then(response => {
-                setData(response.data);
-            })
-            .catch(function (error) {
-                catchError(error);
-            });
+                .then(response => {
+                    setData(response.data);
+                })
+                .catch(function (error) {
+                    catchError(error);
+                });
         };
         const willFocusSubscription = navigation.addListener('focus', () => {
             bootstrapAsync();
@@ -42,7 +42,7 @@ export const RequestScreen = ({navigation}) => {
     const renderLabel = () => {
         if (value || isFocus) {
             return (
-                <Text style={[styles.label, isFocus && { color: 'blue' }]}>
+                <Text style={[styles.label, isFocus && {color: 'blue'}]}>
                     Причина заявки
                 </Text>
             );
@@ -81,7 +81,7 @@ export const RequestScreen = ({navigation}) => {
             <View style={styles.container}>
                 {renderLabel()}
                 <Dropdown
-                    style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                    style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}

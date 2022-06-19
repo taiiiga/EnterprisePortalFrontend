@@ -6,8 +6,8 @@ import axios from "axios";
 import {apiUrl} from "../networking/ListOfUrl";
 import {catchError} from "../constans";
 
-export default function TaskScreen({ route, navigation }) {
-    const { item } = route.params;
+export default function TaskScreen({route, navigation}) {
+    const {item} = route.params;
 
     const [name, setName] = React.useState(item.name);
     const [text, setText] = React.useState(item.text);
@@ -27,21 +27,21 @@ export default function TaskScreen({ route, navigation }) {
                     id: item.id
                 },
             })
-            .then(response => {
-                const task = response.data;
-                setName(task.name);
-                setText(task.text);
-                setEmployee(task.employeeName);
-                setProject(task.projectName);
-                setStatus(task.taskTypeName);
-                setDate(task.deadline);
-            })
-            .catch(function (error) {
-                if (error.response.status === 401) {
-                    alert("Войдите еще раз в аккаунт, пожалуйста!");
-                }
-                catchError(error);
-            });
+                .then(response => {
+                    const task = response.data;
+                    setName(task.name);
+                    setText(task.text);
+                    setEmployee(task.employeeName);
+                    setProject(task.projectName);
+                    setStatus(task.taskTypeName);
+                    setDate(task.deadline);
+                })
+                .catch(function (error) {
+                    if (error.response.status === 401) {
+                        alert("Войдите еще раз в аккаунт, пожалуйста!");
+                    }
+                    catchError(error);
+                });
         };
         const willFocusSubscription = navigation.addListener('focus', () => {
             bootstrapAsync();
@@ -64,7 +64,7 @@ export default function TaskScreen({ route, navigation }) {
                     }
                     type="clear"
                     title=""
-                    onPress={() => navigation.navigate('Редактировать задачу', { item: item })}
+                    onPress={() => navigation.navigate('Редактировать задачу', {item: item})}
                 />
             )
         });
@@ -74,8 +74,8 @@ export default function TaskScreen({ route, navigation }) {
         <ScrollView style={tw`w-full h-full p-5`}>
             <Text style={tw`text-black font-bold text-center mb-5`}>Статус задачи:
                 {status !== "Закрыта"
-                        ? <Text style={tw`text-green-500 font-bold text-center mb-5`}> {status}</Text>
-                        : <Text style={tw`text-red-500 font-bold text-center mb-5`}> {status}</Text>}
+                    ? <Text style={tw`text-green-500 font-bold text-center mb-5`}> {status}</Text>
+                    : <Text style={tw`text-red-500 font-bold text-center mb-5`}> {status}</Text>}
             </Text>
             <View style={tw`bg-slate-700 p-5`}>
                 <Text style={tw`text-white text-center`}>{name}</Text>
@@ -84,7 +84,8 @@ export default function TaskScreen({ route, navigation }) {
                 <Text style={tw`text-white text-center`}>{text}</Text>
             </View>
             <View style={tw`bg-slate-700 p-5`}>
-                <Text style={tw`text-white text-center`}>Задача #{JSON.stringify(item.id)}, Ответственный: {employee}</Text>
+                <Text style={tw`text-white text-center`}>Задача #{JSON.stringify(item.id)},
+                    Ответственный: {employee}</Text>
                 <Text style={tw`text-white text-center`}>Проект: {project}</Text>
             </View>
             <View style={tw`bg-slate-700 p-5 border`}>

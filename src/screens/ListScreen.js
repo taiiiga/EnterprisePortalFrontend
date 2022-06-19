@@ -1,38 +1,55 @@
-import {Pressable, ScrollView, Text, View} from "react-native";
-import React, {useEffect} from "react";
-import {AuthContext} from "../../App";
+import {FlatList, ImageBackground, Pressable, StyleSheet, Text, View} from "react-native";
+import React from "react";
 import {t} from "react-native-tailwindcss";
-import tw  from 'twrnc';
-import { ImageBackground, StyleSheet, FlatList } from "react-native";
-import * as SecureStore from "expo-secure-store";
-import LogRocket from "@logrocket/react-native";
+import tw from 'twrnc';
 import axios from "axios";
 import {apiUrl} from "../networking/ListOfUrl";
 import {catchError} from "../constans";
+import {Button, Icon} from "react-native-elements";
 
 
-export default function ListScreen({navigation}, model) {
-
-    const { signOut } = React.useContext(AuthContext);
-
+export default function ListScreen({route, navigation}) {
+    const {model} = route.params;
     const [list, setList] = React.useState([]);
-    const [buttonStyle, setButtonStyle] = React.useState(style.button);
-    const Item = ({item}) => (<View style={style.elements}>
-        <Pressable style={tw`flex-1 bg-indigo-500 h-12 w-12 items-center justify-center`} onPress={read}>
-            <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>{item.id}</Text>
-        </Pressable>
-        <Pressable style={tw`w-12 h-12 bg-indigo-500 items-center flex-initial justify-center`}
-                   onPress={this.props.style(tw`w-12 h-12 bg-red-500 items-center flex-initial justify-center`)}>
-            <ImageBackground source={{ uri: "https://static.wikia.nocookie.net/baldi-fanon/images/7/7a/B889B0A9-4717-4D37-9ADD-AB7B5E11FAEF.png/revision/latest?cb=20190226222946" }}
-                             resizeMode="contain"
-                             style={tw`justify-center w-full h-full`}>
-            </ImageBackground>
-        </Pressable>
-    </View>);
+    const [editButtonStyle, setEditButtonStyle] = React.useState(style.editButton);
+    const [roleButtonStyle, setRoleButtonStyle] = React.useState(style.roleButton);
+    const [removeButtonStyle, setRemoveButtonStyle] = React.useState(style.removeButton);
+    const Item = ({item}) => (
+        <View key={item.id} style={style.elements}>
+            <Pressable style={({pressed}) => [
+                pressed ? style.editButtonPressIn : editButtonStyle
+            ]}
+                       onPress={() => edit(item.id)}>
+                <ImageBackground
+                    source={{uri: "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/pencil-icon.png"}}
+                    resizeMode="contain"
+                    style={tw`justify-center w-full h-full`}
+                >
+                </ImageBackground>
+            </Pressable>
+            <Pressable style={({pressed}) => [
+                pressed ? style.roleButtonPressIn : roleButtonStyle
+            ]}
+                       onPress={() => read(item.id)}>
+                <Text style={[t.textWhite, t.fontMedium, t.textXl]}>{item.id}</Text>
+            </Pressable>
+            <Pressable style={({pressed}) => [
+                pressed ? style.removeButtonPressIn : removeButtonStyle
+            ]}
+                       onPress={() => remove(item.id)}>
+                <ImageBackground
+                    source={{uri: "https://static.wikia.nocookie.net/baldi-fanon/images/7/7a/B889B0A9-4717-4D37-9ADD-AB7B5E11FAEF.png/revision/latest?cb=20190226222946"}}
+                    resizeMode="contain"
+                    style={tw`justify-center w-full h-full`}>
+                </ImageBackground>
+            </Pressable>
+        </View>);
 
-    React.useEffect(() => {
+    React.useEffect(() => refresh(), []);
+
+    const refresh = () => {
         const bootstrapAsync = async () => {
-            await axios.get(apiUrl + "Role"+"/List", {
+            await axios.get(apiUrl + model + "/List", {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
@@ -46,29 +63,92 @@ export default function ListScreen({navigation}, model) {
                 });
         };
         bootstrapAsync();
-    }, []);
+    }
 
     const create = () => {
-
+        navigation.navigate('Создание ' + model, {
+            "item": model
+        })
     };
-    const read = () => {};
-    const update = () => {};
-    const remove = () => {};
+    const read = (id) => {
+        navigation.navigate('Просмотр ' + model, {
+            "item": model,
+            "id": id
+        })
+    };
+    const edit = (id) => {
+        navigation.navigate('Изменение ' + model, {
+            "item": model,
+            "id": id
+        })
+    };
+    const remove = async (id) => {
+        await axios.delete(apiUrl + model + "/Delete",
+            {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                params: {
+                    id: id
+                }
+            }
+        )
+            .then(response => {
+                refresh()
+            })
+            .catch(function (error) {
+                catchError(error);
+            });
+    };
+
+
+    const [isFetching, setIsFetching] = React.useState(false);
+
+    const onRefresh = async () => {
+        setIsFetching(true);
+        refresh()
+        setIsFetching(false);
+    };
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <View>
+                    <Button
+                        icon={
+                            <Icon
+                                name="add"
+                                size={30}
+                                color="#5a67d8"
+                            />
+                        }
+                        type="clear"
+                        title=""
+                        onPress={create}
+                    />
+                </View>
+            )
+        });
+    }, [navigation]);
 
     return (
-        <ScrollView>
-            <FlatList data={list} renderItem={Item}/>
-            <Pressable style={buttonStyle} onPress={create}
-                       onPressIn={() => setButtonStyle(style.buttonPressIn)}
-                       onPressOut={() => setButtonStyle(style.button)}>
-                <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Добавить</Text>
-            </Pressable>
-
-        </ScrollView>
+        <View>
+            <FlatList onRefresh={onRefresh}
+                      refreshing={isFetching}
+                      data={list}
+                      renderItem={Item}/>
+        </View>
     );
 }
 
 const style = {
+    roleButton: tw`w-4/6 h-12 rounded bg-slate-800 items-center flex justify-center`,
+    roleButtonPressIn: tw`w-4/6 h-12 rounded bg-emerald-400 items-center flex justify-center`,
+    removeButton: tw`w-1/6 h-12 items-center flex justify-center`,
+    removeButtonPressIn: tw`w-1/6 h-12 items-center flex justify-center p-1`,
+    editButton: tw`w-1/6 h-12 items-center flex justify-center`,
+    editButtonPressIn: tw`w-1/6 h-12 items-center flex justify-center p-1`,
     button: tw`w-full h-12 rounded bg-slate-800 items-center flex justify-center mt-5`,
     buttonPressIn: tw`w-full h-12 rounded bg-emerald-400 items-center flex justify-center mt-5`,
     elements: tw`flex flex-nowrap flex-row mt-5`,

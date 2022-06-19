@@ -1,16 +1,13 @@
 import React from "react";
-import {Avatar, Icon} from 'react-native-elements';
-import {View, Text, ScrollView, Pressable, TextInput, StyleSheet, Switch} from "react-native";
+import {Pressable, ScrollView, StyleSheet, Text, TextInput} from "react-native";
 import tw from "twrnc";
 import {t} from "react-native-tailwindcss";
-import {AuthContext} from "../../App";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import {apiUrl} from "../networking/ListOfUrl";
 import {catchError} from "../constans";
 import {Dropdown} from "react-native-element-dropdown";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 export const EditProfileScreen = ({navigation}) => {
@@ -48,8 +45,8 @@ export const EditProfileScreen = ({navigation}) => {
     };
 
     const data = [
-        { label: 'Мужской', value: true },
-        { label: 'Женский', value: false },
+        {label: 'Мужской', value: true},
+        {label: 'Женский', value: false},
     ];
 
     React.useEffect(() => {
@@ -66,24 +63,24 @@ export const EditProfileScreen = ({navigation}) => {
                     login: login
                 },
             })
-            .then(response => {
-                const person = response.data;
-                setSecondName(person.fullName.split(' ')[0]);
-                setFirstName(person.fullName.split(' ')[1]);
-                setFatherName(person.fullName.split(' ')[2]);
-                setSex(person.sex === "Мужской");
-                const date = person.dateOfBirth.split('.');
-                setDateOfBirth(new Date(date[2], date[1], date[0]));
-                setPhone(person.phone);
-                setEmail(person.email);
-                setTelegram(person.telegram);
-            })
-            .catch(function (error) {
-                if (error.response.status === 401) {
-                    alert("Войдите еще раз в аккаунт, пожалуйста!");
-                }
-                catchError(error);
-            });
+                .then(response => {
+                    const person = response.data;
+                    setSecondName(person.fullName.split(' ')[0]);
+                    setFirstName(person.fullName.split(' ')[1]);
+                    setFatherName(person.fullName.split(' ')[2]);
+                    setSex(person.sex === "Мужской");
+                    const date = person.dateOfBirth.split('.');
+                    setDateOfBirth(new Date(date[2], date[1], date[0]));
+                    setPhone(person.phone);
+                    setEmail(person.email);
+                    setTelegram(person.telegram);
+                })
+                .catch(function (error) {
+                    if (error.response.status === 401) {
+                        alert("Войдите еще раз в аккаунт, пожалуйста!");
+                    }
+                    catchError(error);
+                });
         };
 
         bootstrapAsync();
@@ -116,12 +113,12 @@ export const EditProfileScreen = ({navigation}) => {
                 "Content-Type": "application/json"
             },
         })
-        .then(response => {
-            navigation.goBack();
-        })
-        .catch(function (error) {
-            catchError(error);
-        });
+            .then(response => {
+                navigation.goBack();
+            })
+            .catch(function (error) {
+                catchError(error);
+            });
     };
 
     return (
@@ -152,7 +149,7 @@ export const EditProfileScreen = ({navigation}) => {
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Пол</Text>
             <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }, styles.input]}
+                style={[styles.dropdown, isFocus && {borderColor: 'blue'}, styles.input]}
                 data={data}
                 maxHeight={300}
                 labelField="label"
@@ -169,10 +166,10 @@ export const EditProfileScreen = ({navigation}) => {
             <Text style={tw`mt-2 font-bold mb-1`}>Дата рождения</Text>
             <DateTimePicker
                 style={tw`h-10 w-full`}
-                value={ dateOfBirth }
+                value={dateOfBirth}
                 mode='date'
                 display='calendar'
-                onChange={onChange} />
+                onChange={onChange}/>
             <Text style={tw`mt-2 font-bold mb-1`}>Мобильный телефон</Text>
             <TextInput
                 style={styles.input}
