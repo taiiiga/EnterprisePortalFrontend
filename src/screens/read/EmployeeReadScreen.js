@@ -111,8 +111,10 @@ export default function EmployeeReadScreen({route, navigation}) {
     return (
         <View key={model.id} style={style.elements}>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID: {model.id}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>логин: {model.login}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>пароль: {model.password}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>email: {model.email}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID проекта: {model.projectId}</Text>
         </View>
     );
 }
