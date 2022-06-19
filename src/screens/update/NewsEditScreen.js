@@ -8,7 +8,7 @@ import {catchError} from "../../constans";
 import {Button, Icon} from "react-native-elements";
 
 
-export default function DepartmentEditScreen({route, navigation}) {
+export default function NewsEditScreen({route, navigation}) {
     const {item, id} = route.params;
 
     React.useEffect(() => {
@@ -34,13 +34,21 @@ export default function DepartmentEditScreen({route, navigation}) {
         bootstrapAsync();
     }, []);
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
-    const [name, setName] = React.useState("");
-    const [managerId, setManagerId] = React.useState("");
+    const [header, setHeader] = React.useState("");
+    const [authorId, setAuthorId] = React.useState("");
+    const [text, setText] = React.useState("");
+    const [newsTypeId, setNewsTypeId] = React.useState("");
+    const [date, setDate] = React.useState("");
+    const [image, setImage] = React.useState("");
     const save = async () => {
         await axios.post(apiUrl + item + "/Update", {
             id: id,
-            name: name,
-            managerId: managerId
+            header: header,
+            authorId: authorId,
+            text: text,
+            newsTypeId: newsTypeId,
+            date: date,
+            image: image,
         }, {
             headers: {
                 "Accept": "application/json",
@@ -57,20 +65,52 @@ export default function DepartmentEditScreen({route, navigation}) {
 
     return (
         <ScrollView style={tw`h-full w-full bg-white p-5`}>
-            <Text style={tw`mt-2 font-bold mb-1`}>Название</Text>
+            <Text style={tw`mt-2 font-bold mb-1`}>ID автора</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setName}
-                value={name}
-                placeholder="Департамент"
+                onChangeText={setAuthorId}
+                value={authorId}
+                placeholder="Автор"
                 placeholderTextColor={'gray'}
             />
-            <Text style={tw`mt-2 font-bold mb-1`}>ID менеджера</Text>
+            <Text style={tw`mt-2 font-bold mb-1`}>Заголовок</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setManagerId}
-                value={managerId}
-                placeholder="4"
+                onChangeText={setHeader}
+                value={header}
+                placeholder="Заголовок"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Содержание</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setText}
+                value={text}
+                placeholder="Содержание"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID типа новости</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setNewsTypeId}
+                value={newsTypeId}
+                placeholder="Содержание"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Дата</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setDate}
+                value={date}
+                placeholder="Содержание"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Изображение</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setImage}
+                value={image}
+                placeholder="Содержание"
                 placeholderTextColor={'gray'}
             />
             <Pressable style={buttonStyle} onPress={() => save()}

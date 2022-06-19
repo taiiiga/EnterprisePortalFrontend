@@ -100,6 +100,118 @@ export default function AdminScreen({navigation}) {
                             задач</Text>
                     </ImageBackground>
                 </Pressable>
+                <Pressable style={taskButtonStyle}
+                           onPress={() =>
+                               navigation.navigate('Общий список', {
+                                   model: "News"
+                               })
+                           }
+                           onPressIn={() => setTaskButtonStyle(style.buttonPressIn)}
+                           onPressOut={() => setTaskButtonStyle(style.button)}>
+                    <ImageBackground source={{uri: "https://miro.medium.com/max/1140/1*ZD3KZIlKNZtgVKw-3JFUwQ.jpeg"}}
+                                     resizeMode="cover"
+                                     style={tw`flex-1 justify-center w-full h-full shadow-xl border-2`}
+                                     blurRadius={5}>
+                        <Text style={[styles.text, tw`text-center text-4xl text-white font-bold`]}>Настройка
+                            новостей</Text>
+                    </ImageBackground>
+                </Pressable>
+                <Pressable style={taskButtonStyle}
+                           onPress={() =>
+                               navigation.navigate('Общий список', {
+                                   model: "Position"
+                               })
+                           }
+                           onPressIn={() => setTaskButtonStyle(style.buttonPressIn)}
+                           onPressOut={() => setTaskButtonStyle(style.button)}>
+                    <ImageBackground source={{uri: "https://miro.medium.com/max/1140/1*ZD3KZIlKNZtgVKw-3JFUwQ.jpeg"}}
+                                     resizeMode="cover"
+                                     style={tw`flex-1 justify-center w-full h-full shadow-xl border-2`}
+                                     blurRadius={5}>
+                        <Text style={[styles.text, tw`text-center text-4xl text-white font-bold`]}>Настройка
+                            позиций</Text>
+                    </ImageBackground>
+                </Pressable>
+                <Pressable style={taskButtonStyle}
+                           onPress={() =>
+                               navigation.navigate('Общий список', {
+                                   model: "Request"
+                               })
+                           }
+                           onPressIn={() => setTaskButtonStyle(style.buttonPressIn)}
+                           onPressOut={() => setTaskButtonStyle(style.button)}>
+                    <ImageBackground source={{uri: "https://miro.medium.com/max/1140/1*ZD3KZIlKNZtgVKw-3JFUwQ.jpeg"}}
+                                     resizeMode="cover"
+                                     style={tw`flex-1 justify-center w-full h-full shadow-xl border-2`}
+                                     blurRadius={5}>
+                        <Text style={[styles.text, tw`text-center text-4xl text-white font-bold`]}>Настройка
+                            запросов</Text>
+                    </ImageBackground>
+                </Pressable>
+                <Pressable style={taskButtonStyle}
+                           onPress={() =>
+                               navigation.navigate('Общий список', {
+                                   model: "Problem"
+                               })
+                           }
+                           onPressIn={() => setTaskButtonStyle(style.buttonPressIn)}
+                           onPressOut={() => setTaskButtonStyle(style.button)}>
+                    <ImageBackground source={{uri: "https://miro.medium.com/max/1140/1*ZD3KZIlKNZtgVKw-3JFUwQ.jpeg"}}
+                                     resizeMode="cover"
+                                     style={tw`flex-1 justify-center w-full h-full shadow-xl border-2`}
+                                     blurRadius={5}>
+                        <Text style={[styles.text, tw`text-center text-4xl text-white font-bold`]}>Настройка
+                            проблем</Text>
+                    </ImageBackground>
+                </Pressable>
+                <Pressable style={taskButtonStyle}
+                           onPress={() =>
+                               navigation.navigate('Общий список', {
+                                   model: "TypesOfWork"
+                               })
+                           }
+                           onPressIn={() => setTaskButtonStyle(style.buttonPressIn)}
+                           onPressOut={() => setTaskButtonStyle(style.button)}>
+                    <ImageBackground source={{uri: "https://miro.medium.com/max/1140/1*ZD3KZIlKNZtgVKw-3JFUwQ.jpeg"}}
+                                     resizeMode="cover"
+                                     style={tw`flex-1 justify-center w-full h-full shadow-xl border-2`}
+                                     blurRadius={5}>
+                        <Text style={[styles.text, tw`text-center text-4xl text-white font-bold`]}>Настройка
+                            типов работ</Text>
+                    </ImageBackground>
+                </Pressable>
+                <Pressable style={taskButtonStyle}
+                           onPress={() =>
+                               navigation.navigate('Общий список', {
+                                   model: "NewsType"
+                               })
+                           }
+                           onPressIn={() => setTaskButtonStyle(style.buttonPressIn)}
+                           onPressOut={() => setTaskButtonStyle(style.button)}>
+                    <ImageBackground source={{uri: "https://miro.medium.com/max/1140/1*ZD3KZIlKNZtgVKw-3JFUwQ.jpeg"}}
+                                     resizeMode="cover"
+                                     style={tw`flex-1 justify-center w-full h-full shadow-xl border-2`}
+                                     blurRadius={5}>
+                        <Text style={[styles.text, tw`text-center text-4xl text-white font-bold`]}>Настройка
+                            типов новостей</Text>
+                    </ImageBackground>
+                </Pressable>
+                <Pressable style={taskButtonStyle}
+                           onPress={() =>
+                               navigation.navigate('Общий список', {
+                                   model: "TaskType"
+                               })
+                           }
+                           onPressIn={() => setTaskButtonStyle(style.buttonPressIn)}
+                           onPressOut={() => setTaskButtonStyle(style.button)}>
+                    <ImageBackground source={{uri: "https://miro.medium.com/max/1140/1*ZD3KZIlKNZtgVKw-3JFUwQ.jpeg"}}
+                                     resizeMode="cover"
+                                     style={tw`flex-1 justify-center w-full h-full shadow-xl border-2`}
+                                     blurRadius={5}>
+                        <Text style={[styles.text, tw`text-center text-4xl text-white font-bold`]}>Настройка
+                            типов задач</Text>
+                    </ImageBackground>
+                </Pressable>
                 <Pressable style={buttonStyle} onPress={signOut}
                            onPressIn={() => setButtonStyle(style.buttonPressIn)}
                            onPressOut={() => setButtonStyle(style.button)}>

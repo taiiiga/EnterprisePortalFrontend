@@ -8,7 +8,7 @@ import {catchError} from "../../constans";
 import {Button, Icon} from "react-native-elements";
 
 
-export default function DepartmentEditScreen({route, navigation}) {
+export default function RequestEditScreen({route, navigation}) {
     const {item, id} = route.params;
 
     React.useEffect(() => {
@@ -34,13 +34,15 @@ export default function DepartmentEditScreen({route, navigation}) {
         bootstrapAsync();
     }, []);
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
-    const [name, setName] = React.useState("");
-    const [managerId, setManagerId] = React.useState("");
+    const [employeeId, setEmployeeId] = React.useState("");
+    const [problemId, setProblemId] = React.useState("");
+    const [commentary, setCommentary] = React.useState("");
     const save = async () => {
         await axios.post(apiUrl + item + "/Update", {
             id: id,
-            name: name,
-            managerId: managerId
+            employeeId: employeeId,
+            problemId: problemId,
+            commentary: commentary
         }, {
             headers: {
                 "Accept": "application/json",
@@ -57,20 +59,28 @@ export default function DepartmentEditScreen({route, navigation}) {
 
     return (
         <ScrollView style={tw`h-full w-full bg-white p-5`}>
-            <Text style={tw`mt-2 font-bold mb-1`}>Название</Text>
+            <Text style={tw`mt-2 font-bold mb-1`}>ID сотрудника</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setName}
-                value={name}
-                placeholder="Департамент"
+                onChangeText={setEmployeeId}
+                value={employeeId}
+                placeholder="Сотрудник"
                 placeholderTextColor={'gray'}
             />
-            <Text style={tw`mt-2 font-bold mb-1`}>ID менеджера</Text>
+            <Text style={tw`mt-2 font-bold mb-1`}>ID проблемы</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setManagerId}
-                value={managerId}
-                placeholder="4"
+                onChangeText={setProblemId}
+                value={problemId}
+                placeholder="Проблема"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Комментарий</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setCommentary}
+                value={commentary}
+                placeholder="Комментарий"
                 placeholderTextColor={'gray'}
             />
             <Pressable style={buttonStyle} onPress={() => save()}

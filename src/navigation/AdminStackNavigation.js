@@ -17,6 +17,24 @@ import ProjectReadScreen from "../screens/read/ProjectReadScreen";
 import TaskCreateScreen from "../screens/create/TaskCreateScreen";
 import TaskEditScreen from "../screens/update/TaskEditScreen";
 import TaskReadScreen from "../screens/read/TaskReadScreen";
+import TaskTypeReadScreen from "../screens/read/TaskTypeReadScreen";
+import NewsTypeReadScreen from "../screens/read/NewsTypeReadScreen";
+import RequestReadScreen from "../screens/read/RequestReadScreen";
+import ProblemReadScreen from "../screens/read/ProblemReadScreen";
+import TypesOfWorkReadScreen from "../screens/read/TypesOfWorkReadScreen";
+import PositionReadScreen from "../screens/read/PositionReadScreen";
+import TaskTypeCreateScreen from "../screens/create/TaskTypeCreateScreen";
+import TaskTypeEditScreen from "../screens/update/TaskTypeEditScreen";
+import NewsTypeCreateScreen from "../screens/create/NewsTypeCreateScreen";
+import NewsTypeEditScreen from "../screens/update/NewsTypeEditScreen";
+import RequestCreateScreen from "../screens/create/RequestCreateScreen";
+import RequestEditScreen from "../screens/update/RequestEditScreen";
+import ProblemCreateScreen from "../screens/create/ProblemCreateScreen";
+import ProblemEditScreen from "../screens/update/ProblemEditScreen";
+import PositionCreateScreen from "../screens/create/PositionCreateScreen";
+import PositionEditScreen from "../screens/update/PositionEditScreen";
+import TypesOfWorkCreateScreen from "../screens/create/TypesOfWorkCreateScreen";
+import TypesOfWorkEditScreen from "../screens/update/TypesOfWorkEditScreen";
 
 const Stack = createStackNavigator();
 
@@ -40,6 +58,24 @@ export const AdminStackScreen = () => {
             <Stack.Screen name="Создание Task" component={TaskCreateScreen} />
             <Stack.Screen name="Изменение Task" component={TaskEditScreen} />
             <Stack.Screen name="Просмотр Task" component={TaskReadScreen} />
+            <Stack.Screen name="Создание TaskType" component={TaskTypeCreateScreen} />
+            <Stack.Screen name="Изменение TaskType" component={TaskTypeEditScreen} />
+            <Stack.Screen name="Просмотр TaskType" component={TaskTypeReadScreen} />
+            <Stack.Screen name="Создание NewsType" component={NewsTypeCreateScreen} />
+            <Stack.Screen name="Изменение NewsType" component={NewsTypeEditScreen} />
+            <Stack.Screen name="Просмотр NewsType" component={NewsTypeReadScreen} />
+            <Stack.Screen name="Создание Request" component={RequestCreateScreen} />
+            <Stack.Screen name="Изменение Request" component={RequestEditScreen} />
+            <Stack.Screen name="Просмотр Request" component={RequestReadScreen} />
+            <Stack.Screen name="Создание Problem" component={ProblemCreateScreen} />
+            <Stack.Screen name="Изменение Problem" component={ProblemEditScreen} />
+            <Stack.Screen name="Просмотр Problem" component={ProblemReadScreen} />
+            <Stack.Screen name="Создание Position" component={PositionCreateScreen} />
+            <Stack.Screen name="Изменение Position" component={PositionEditScreen} />
+            <Stack.Screen name="Просмотр Position" component={PositionReadScreen} />
+            <Stack.Screen name="Создание TypesOfWork" component={TypesOfWorkCreateScreen} />
+            <Stack.Screen name="Изменение TypesOfWork" component={TypesOfWorkEditScreen} />
+            <Stack.Screen name="Просмотр TypesOfWork" component={TypesOfWorkReadScreen} />
         </Stack.Navigator>
     );
 };

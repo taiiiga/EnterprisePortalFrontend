@@ -11,15 +11,13 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import * as SecureStore from "expo-secure-store";
 
 
-export default function DepartmentCreateScreen({route, navigation}) {
+export default function TypesOfWorkCreateScreen({route, navigation}) {
     const {item} = route.params;
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
     const [name, setName] = React.useState("");
-    const [managerId, setManagerId] = React.useState("");
     const save = async () => {
         await axios.post(apiUrl + item + "/Create", {
-            name: name,
-            managerId: managerId
+            name: name
         }, {
             headers: {
                 "Accept": "application/json",
@@ -40,14 +38,7 @@ export default function DepartmentCreateScreen({route, navigation}) {
             <TextInput
                 style={styles.input}
                 onChangeText={setName}
-                placeholder="Департамент"
-                placeholderTextColor={'gray'}
-            />
-            <Text style={tw`mt-2 font-bold mb-1`}>ID менеджера</Text>
-            <TextInput
-                style={styles.input}
-                onChangeText={setManagerId}
-                placeholder="4"
+                placeholder="Тип работы"
                 placeholderTextColor={'gray'}
             />
             <Pressable style={buttonStyle} onPress={() => save()}

@@ -9,17 +9,26 @@ import {Button, Icon} from "react-native-elements";
 import {Dropdown} from "react-native-element-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as SecureStore from "expo-secure-store";
+import NewsTypeCreateScreen from "./NewsTypeCreateScreen";
 
 
-export default function DepartmentCreateScreen({route, navigation}) {
+export default function NewsCreateScreen({route, navigation}) {
     const {item} = route.params;
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
-    const [name, setName] = React.useState("");
-    const [managerId, setManagerId] = React.useState("");
+    const [header, setHeader] = React.useState("");
+    const [authorId, setAuthorId] = React.useState("");
+    const [text, setText] = React.useState("");
+    const [newsTypeId, setNewsTypeId] = React.useState("");
+    const [date, setDate] = React.useState("");
+    const [image, setImage] = React.useState("");
     const save = async () => {
         await axios.post(apiUrl + item + "/Create", {
-            name: name,
-            managerId: managerId
+            header: header,
+            authorId: authorId,
+            text: text,
+            newsTypeId: newsTypeId,
+            date: date,
+            image: image,
         }, {
             headers: {
                 "Accept": "application/json",
@@ -36,18 +45,46 @@ export default function DepartmentCreateScreen({route, navigation}) {
 
     return (
         <ScrollView style={tw`h-full w-full bg-white p-5`}>
-            <Text style={tw`mt-2 font-bold mb-1`}>Название</Text>
+            <Text style={tw`mt-2 font-bold mb-1`}>ID автора</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setName}
-                placeholder="Департамент"
+                onChangeText={setAuthorId}
+                placeholder="Автор"
                 placeholderTextColor={'gray'}
             />
-            <Text style={tw`mt-2 font-bold mb-1`}>ID менеджера</Text>
+            <Text style={tw`mt-2 font-bold mb-1`}>Заголовок</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setManagerId}
-                placeholder="4"
+                onChangeText={setHeader}
+                placeholder="Заголовок"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Содержание</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setText}
+                placeholder="Содержание"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID типа новости</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setNewsTypeId}
+                placeholder="Содержание"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Дата</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setDate}
+                placeholder="Содержание"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Изображение</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setImage}
+                placeholder="Содержание"
                 placeholderTextColor={'gray'}
             />
             <Pressable style={buttonStyle} onPress={() => save()}

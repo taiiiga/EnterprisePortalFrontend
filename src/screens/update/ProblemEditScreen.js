@@ -1,4 +1,4 @@
-import {Alert, FlatList, ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
+import {FlatList, ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
 import React from "react";
 import {t} from "react-native-tailwindcss";
 import tw from 'twrnc';
@@ -6,20 +6,39 @@ import axios from "axios";
 import {apiUrl} from "../../networking/ListOfUrl";
 import {catchError} from "../../constans";
 import {Button, Icon} from "react-native-elements";
-import {Dropdown} from "react-native-element-dropdown";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import * as SecureStore from "expo-secure-store";
 
 
-export default function DepartmentCreateScreen({route, navigation}) {
-    const {item} = route.params;
+export default function ProblemEditScreen({route, navigation}) {
+    const {item, id} = route.params;
+
+    React.useEffect(() => {
+        const bootstrapAsync = async () => {
+            await axios.get(apiUrl + item + "/Get", {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                params: {
+                    id: id
+                },
+
+            })
+                .then(response => {
+                    const model = response.data
+                    setName(model.name);
+                })
+                .catch(function (error) {
+                    catchError(error);
+                });
+        };
+        bootstrapAsync();
+    }, []);
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
-    const [name, setName] = React.useState("");
-    const [managerId, setManagerId] = React.useState("");
+    const [text, setText] = React.useState("");
     const save = async () => {
-        await axios.post(apiUrl + item + "/Create", {
-            name: name,
-            managerId: managerId
+        await axios.post(apiUrl + item + "/Update", {
+            id: id,
+            text: text
         }, {
             headers: {
                 "Accept": "application/json",
@@ -36,18 +55,12 @@ export default function DepartmentCreateScreen({route, navigation}) {
 
     return (
         <ScrollView style={tw`h-full w-full bg-white p-5`}>
-            <Text style={tw`mt-2 font-bold mb-1`}>Название</Text>
+            <Text style={tw`mt-2 font-bold mb-1`}>Текст</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setName}
-                placeholder="Департамент"
-                placeholderTextColor={'gray'}
-            />
-            <Text style={tw`mt-2 font-bold mb-1`}>ID менеджера</Text>
-            <TextInput
-                style={styles.input}
-                onChangeText={setManagerId}
-                placeholder="4"
+                onChangeText={setText}
+                value={text}
+                placeholder="Текст"
                 placeholderTextColor={'gray'}
             />
             <Pressable style={buttonStyle} onPress={() => save()}
