@@ -22,7 +22,7 @@ export default function PositionReadScreen({route, navigation}) {
                     },
                     style: "cancel"
                 },
-                {text: "Да", onPress: () => remove}
+                {text: "Да", onPress: () => remove()}
             ],
             {cancelable: true},
         );

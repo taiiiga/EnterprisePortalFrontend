@@ -22,7 +22,7 @@ export default function ProjectReadScreen({route, navigation}) {
                     },
                     style: "cancel"
                 },
-                {text: "Да", onPress: () => remove}
+                {text: "Да", onPress: () => remove()}
             ],
             {cancelable: true},
         );
