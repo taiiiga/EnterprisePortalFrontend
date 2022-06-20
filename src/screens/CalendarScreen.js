@@ -219,7 +219,7 @@ export default function CalendarScreen({navigation}) {
                             item: item,
                         })}>
                         <Text style={[t.textWhite, t.fontMedium]}>Задача №{item.id}</Text>
-                        <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>{item.name}</Text>
+                        <Text style={[t.textWhite, t.textCenter, t.fontMedium, t.text2xl]}>{item.name}</Text>
                         <Text style={[t.textWhite, t.fontMedium]}>Крайний срок {item.deadline}</Text>
                     </Pressable>
                 ) : <View style={tw`items-center justify-center`}><Text style={[t.fontMedium, t.mT20]}>Задач нет</Text></View>}

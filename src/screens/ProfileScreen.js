@@ -1,6 +1,7 @@
 import React from "react";
 import {Avatar, Button, Icon} from 'react-native-elements';
 import {View, Text, ScrollView, Pressable, RefreshControl} from "react-native";
+import { Badge } from 'react-native-paper';
 import tw from "twrnc";
 import {t} from "react-native-tailwindcss";
 import {AuthContext} from "../../App";
@@ -16,6 +17,8 @@ export const ProfileScreen = ({navigation}) => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [begin, setBegin] = React.useState('');
     const [end, setEnd] = React.useState('');
+    const [dateBegin, setDateBegin] = React.useState(new Date());
+    const [dateEnd, setDateEnd] = React.useState(new Date());
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
@@ -35,6 +38,12 @@ export const ProfileScreen = ({navigation}) => {
                 setPerson(response.data);
                 setBegin(new Date(response.data.workTimeBegin).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
                 setEnd(new Date(response.data.workTimeEnd).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
+                const be = new Date();
+                be.setHours(new Date(response.data.workTimeBegin).getHours(), new Date(response.data.workTimeBegin).getMinutes(), new Date(response.data.workTimeBegin).getSeconds());
+                setDateBegin(be);
+                const en = new Date();
+                en.setHours(new Date(response.data.workTimeEnd).getHours(), new Date(response.data.workTimeEnd).getMinutes(), new Date(response.data.workTimeEnd).getSeconds());
+                setDateEnd(new Date(response.data.workTimeEnd));
             })
             .catch(function (error) {
                 if (error.response.status === 401) {
@@ -69,6 +78,12 @@ export const ProfileScreen = ({navigation}) => {
             setPerson(response.data);
             setBegin(new Date(response.data.workTimeBegin).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
             setEnd(new Date(response.data.workTimeEnd).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
+            const be = new Date();
+            be.setHours(new Date(response.data.workTimeBegin).getHours(), new Date(response.data.workTimeBegin).getMinutes(), new Date(response.data.workTimeBegin).getSeconds());
+            setDateBegin(be);
+            const en = new Date();
+            en.setHours(new Date(response.data.workTimeEnd).getHours(), new Date(response.data.workTimeEnd).getMinutes(), new Date(response.data.workTimeEnd).getSeconds());
+            setDateEnd(new Date(response.data.workTimeEnd));
         })
         .catch(function (error) {
             if (error.response.status === 401) {
@@ -118,6 +133,12 @@ export const ProfileScreen = ({navigation}) => {
                         uri: person.sex == "Мужской" ? 'https://14.img.avito.st/avatar/social/1024x1024/9441860814.jpg' : 'https://z0sqrs-a.akamaihd.net/1647-easthillmedical/staff/she.jpg',
                     }}
                     showEditButton
+                />
+                <Badge
+                    status= "success"
+                    style={new Date() >= dateBegin && dateEnd >= new Date()
+                        ? { position: 'absolute', top: 30, right: 130, backgroundColor: 'rgba(0, 212, 35, 1)' }
+                        : { position: 'absolute', top: 30, right: 130, backgroundColor: 'rgba(255, 0, 0, 1)' }}
                 />
                 <Text style={tw`text-xl font-bold mt-2 text-white`}>{person.fullName}</Text>
                 <Text style={tw`text-lg font-bold mt-2 text-white`}>{person.groupName}</Text>

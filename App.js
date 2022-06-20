@@ -14,11 +14,11 @@ import tw, {useDeviceContext} from "twrnc";
 import 'moment';
 import 'moment/locale/ru';
 import {TabNavigator} from "./src/navigation/TabNavigator";
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, LogBox} from 'react-native';
 import {AdminStackScreen} from "./src/navigation/AdminStackNavigation";
-// LogBox.ignoreLogs(['Warning: ...', 'Console Warning: ...']); // Ignore log notification by message
-// LogBox.ignoreAllLogs();//Ignore all log notifications
-export const AuthContext = React.createContext();
+LogBox.ignoreLogs(['Warning: ...', 'Console Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
+export const AuthContext = React.createContext(undefined);
 
 const Stack = createStackNavigator();
 
@@ -78,7 +78,7 @@ export default function App({ navigation }) {
                         console.log(error.response.data);
                         console.log(error.response.status);
                         console.log(error.response.headers);
-                        if (error.response.status === 400) alert("Неправильный логин или пароль!");
+                        if (error.response.status === 400) alert("Неправильный логин или пароль!!");
                     } else if (error.request) {
                         console.log(error.request);
                     } else {

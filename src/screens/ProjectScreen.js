@@ -83,22 +83,22 @@ export const ProjectScreen = ({ route, navigation }) => {
             <Text style={tw`mt-2 font-bold`}>Задачи</Text>
             <View style={tw`bg-slate-300 rounded p-5 mt-2`}>
                 {project.tasks.map((item) =>
-                    <Pressable key={item.id} style={tw`w-full h-30 rounded bg-slate-800 flex mt-5 items-center flex justify-center`}
+                    <Pressable key={item.id} style={tw`w-full h-10 rounded bg-slate-800 flex mt-2 items-center flex justify-center`}
                                onPress={() => navigation.navigate('Задача', {
                                    item: item,
                                })}>
-                        <Text style={[styles.text, tw`text-center text-2xl text-white font-bold`]}>{item.name}</Text>
+                        <Text style={[styles.text, tw`text-center text-sm text-white`]}>{item.name}</Text>
                     </Pressable>
                 )}
             </View>
             <Text style={tw`mt-2 font-bold`}>Сотрудники</Text>
             <View style={tw`bg-slate-300 rounded p-5 mt-2`}>
                 {project.employees.map((item) =>
-                    <Pressable key={item.id} style={tw`w-full h-30 rounded bg-slate-800 flex mt-5 items-center flex justify-center`}
-                               onPress={() => navigation.navigate('Профиль', {
+                    <Pressable key={item.id} style={tw`w-full h-10 rounded bg-slate-800 flex mt-2 items-center flex justify-center`}
+                               onPress={() => navigation.navigate('Сотрудник', {
                                    item: item,
                                })}>
-                        <Text style={[styles.text, tw`text-center text-2xl text-white font-bold`]}>{item.fullName}</Text>
+                        <Text style={[styles.text, tw`text-center text-sm text-white`]}>{item.fullName}</Text>
                     </Pressable>
                 )}
             </View>
