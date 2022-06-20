@@ -7,6 +7,7 @@ import {DepartmentScreen} from "../screens/DepartmentScreen";
 import {ProfileStackScreen} from "./ProfileStackScreen";
 import {CalendarStackScreen} from "./CalendarStackScreen";
 import {NewsStackScreen} from "./NewsStackNavigator";
+import {DepartmentStackScreen} from "./DepartmentStackScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +41,7 @@ export const TabNavigator = () => {
             <Tab.Screen name="Календарь" component={CalendarStackScreen} options={{headerShown: false}}/>
             <Tab.Screen name="Помощь" component={RequestScreen} />
             <Tab.Screen name="Главная" component={NewsStackScreen} options={{headerShown: false}}/>
-            <Tab.Screen name="Отдел" component={DepartmentScreen} />
+            <Tab.Screen name="Отдел" component={DepartmentStackScreen} options={{headerShown: false}}/>
             <Tab.Screen name="Профиль" component={ProfileStackScreen} options={{headerShown: false}}/>
         </Tab.Navigator>
     );

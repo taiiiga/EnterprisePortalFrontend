@@ -1,13 +1,16 @@
 import React from "react";
-import {Pressable, ScrollView, StyleSheet, Text, TextInput} from "react-native";
+import {Avatar, Icon} from 'react-native-elements';
+import {View, Text, ScrollView, Pressable, TextInput, StyleSheet, Switch} from "react-native";
 import tw from "twrnc";
 import {t} from "react-native-tailwindcss";
+import {AuthContext} from "../../App";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import {apiUrl} from "../networking/ListOfUrl";
 import {catchError} from "../constans";
 import {Dropdown} from "react-native-element-dropdown";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 export const EditProfileScreen = ({navigation}) => {
@@ -22,6 +25,8 @@ export const EditProfileScreen = ({navigation}) => {
     const [email, setEmail] = React.useState("");
     const [phone, setPhone] = React.useState("");
     const [image, setImage] = React.useState(null);
+    const [workTimeBegin, setWorkTimeBegin] = React.useState(new Date());
+    const [workTimeEnd, setWorkTimeEnd] = React.useState(new Date());
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -44,9 +49,19 @@ export const EditProfileScreen = ({navigation}) => {
         setDateOfBirth(currentDate);
     };
 
+    const onChangeBegin = (event, selectedDate) => {
+        const currentDate = selectedDate || dateOfBirth;
+        setWorkTimeBegin(currentDate);
+    };
+
+    const onChangeEnd = (event, selectedDate) => {
+        const currentDate = selectedDate || dateOfBirth;
+        setWorkTimeEnd(currentDate);
+    };
+
     const data = [
-        {label: 'Мужской', value: true},
-        {label: 'Женский', value: false},
+        { label: 'Мужской', value: true },
+        { label: 'Женский', value: false },
     ];
 
     React.useEffect(() => {
@@ -63,24 +78,26 @@ export const EditProfileScreen = ({navigation}) => {
                     login: login
                 },
             })
-                .then(response => {
-                    const person = response.data;
-                    setSecondName(person.fullName.split(' ')[0]);
-                    setFirstName(person.fullName.split(' ')[1]);
-                    setFatherName(person.fullName.split(' ')[2]);
-                    setSex(person.sex === "Мужской");
-                    const date = person.dateOfBirth.split('.');
-                    setDateOfBirth(new Date(date[2], date[1], date[0]));
-                    setPhone(person.phone);
-                    setEmail(person.email);
-                    setTelegram(person.telegram);
-                })
-                .catch(function (error) {
-                    if (error.response.status === 401) {
-                        alert("Войдите еще раз в аккаунт, пожалуйста!");
-                    }
-                    catchError(error);
-                });
+            .then(response => {
+                const person = response.data;
+                setSecondName(person.fullName.split(' ')[0]);
+                setFirstName(person.fullName.split(' ')[1]);
+                setFatherName(person.fullName.split(' ')[2]);
+                setSex(person.sex === "Мужской");
+                const date = person.dateOfBirth.split('.');
+                setDateOfBirth(new Date(date[2], date[1], date[0]));
+                setPhone(person.phone);
+                setEmail(person.email);
+                setTelegram(person.telegram);
+                setWorkTimeBegin(new Date(person.workTimeBegin));
+                setWorkTimeEnd(new Date(person.workTimeEnd));
+            })
+            .catch(function (error) {
+                if (error.response.status === 401) {
+                    alert("Войдите еще раз в аккаунт, пожалуйста!");
+                }
+                catchError(error);
+            });
         };
 
         bootstrapAsync();
@@ -96,8 +113,17 @@ export const EditProfileScreen = ({navigation}) => {
             name: "imagename.jpg",
         });
         */
-        const login = await SecureStore.getItemAsync("login");
-        await axios.post(apiUrl + "Account/Update", {
+
+
+        /*{
+            id: 0,
+            avatar: "string",
+            fullName: "string",
+            groupName: "string",
+            projectName: "string",
+            positionName: "string",
+            workTypeName: "string",
+            workTime: "string",
             login: login,
             firstName: firstName,
             secondName: secondName,
@@ -107,18 +133,48 @@ export const EditProfileScreen = ({navigation}) => {
             phone: phone,
             email: email,
             telegram: telegram
-        }, {
+        }*/
+
+        const login = await SecureStore.getItemAsync("login");
+        if (workTimeBegin > workTimeEnd) {
+            alert("Время начала работы больше окончания!");
+            return;
+        }
+        const da = {
+            "id": 0,
+            "role": "string",
+            "login": login,
+            "avatar": "string",
+            "fullName": "string",
+            "firstName": firstName,
+            "secondName": secondName,
+            "fatherName": fatherName,
+            "groupName": "string",
+            "projectName": "string",
+            "positionName": "string",
+            "workTypeName": "string",
+            "sex": sex ? "Мужской" : "Женский",
+            "dateOfBirth": dateOfBirth,
+            "phone": phone,
+            "email": email,
+            "telegram": telegram,
+            "workTime": "string",
+            "workTimeBegin": workTimeBegin.toLocaleString(),
+            "workTimeEnd": workTimeEnd.toLocaleString(),
+        }
+        await axios.post(apiUrl + "Account/Update", da, {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             },
         })
-            .then(response => {
-                navigation.goBack();
-            })
-            .catch(function (error) {
-                catchError(error);
-            });
+        .then(response => {
+            navigation.goBack();
+        })
+        .catch(function (error) {
+            alert(error.response);
+            catchError(error);
+        });
     };
 
     return (
@@ -149,7 +205,7 @@ export const EditProfileScreen = ({navigation}) => {
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Пол</Text>
             <Dropdown
-                style={[styles.dropdown, isFocus && {borderColor: 'blue'}, styles.input]}
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }, styles.input]}
                 data={data}
                 maxHeight={300}
                 labelField="label"
@@ -166,10 +222,10 @@ export const EditProfileScreen = ({navigation}) => {
             <Text style={tw`mt-2 font-bold mb-1`}>Дата рождения</Text>
             <DateTimePicker
                 style={tw`h-10 w-full`}
-                value={dateOfBirth}
+                value={ dateOfBirth }
                 mode='date'
                 display='calendar'
-                onChange={onChange}/>
+                onChange={onChange} />
             <Text style={tw`mt-2 font-bold mb-1`}>Мобильный телефон</Text>
             <TextInput
                 style={styles.input}
@@ -194,6 +250,20 @@ export const EditProfileScreen = ({navigation}) => {
                 placeholder="@ivan"
                 placeholderTextColor={'gray'}
             />
+            <Text style={tw`mt-2 font-bold mb-1`}>Время начала работы</Text>
+            <DateTimePicker
+                style={tw`h-10 w-full`}
+                value={ workTimeBegin }
+                mode='time'
+                display='clock'
+                onChange={onChangeBegin} />
+            <Text style={tw`mt-2 font-bold mb-1`}>Время конца работы</Text>
+            <DateTimePicker
+                style={tw`h-10 w-full`}
+                value={ workTimeEnd }
+                mode='time'
+                display='clock'
+                onChange={onChangeEnd} />
             <Pressable style={style.button} onPress={() => saveUser()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>
                 <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Сохранить</Text>

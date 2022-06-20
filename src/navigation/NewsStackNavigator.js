@@ -9,6 +9,7 @@ export const NewsStackScreen = () => {
     return (
         <Stack.Navigator initialRouteName="Новости">
             <Stack.Screen name="Новости" component={HomeScreen} />
+            <Stack.Screen name="Создать новость" component={HomeScreen} options={{headerBackTitle: 'Назад'}}/>
             <Stack.Screen name="Новость"
                           component={NewsScreen}
                           options={{headerBackTitle: 'Назад'}}/>

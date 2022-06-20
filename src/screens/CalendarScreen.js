@@ -1,4 +1,4 @@
-import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {View, StyleSheet, Text, Pressable, ScrollView, ImageBackground, RefreshControl} from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import {t} from "react-native-tailwindcss";
 import tw from "twrnc";
@@ -11,14 +11,40 @@ import {apiUrl} from "../networking/ListOfUrl";
 import {catchError} from "../constans";
 
 export default function CalendarScreen({navigation}) {
-    const {signOut} = React.useContext(AuthContext);
+    const { signOut } = React.useContext(AuthContext);
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
     const [taskStyle, setTaskStyle] = React.useState(style.button);
     const [value, setValue] = React.useState('');
     const [isFocus, setIsFocus] = React.useState(false);
-    const [data, setData] = React.useState([]);
-    const [tasks, setTasks] = React.useState([]);
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
+    const [data, setData] =  React.useState([]);
+    const [tasks, setTasks] =  React.useState([]);
+    const [selectedDate, setSelectedDate] =  React.useState(new Date());
+    const [projectText, setProjectText] =  React.useState('Выберите проект');
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const getData = async () => {
+        const login = await SecureStore.getItemAsync("login");
+        await axios.get(apiUrl + "Account/GetProjects", {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            params: {
+                login: login
+            },
+        })
+            .then(response => {
+                setData(response.data == null ? [] : response.data);
+                if (value) getTasks();
+            })
+            .catch(function (error) {
+                if (error.response.status === 401) {
+                    alert("Войдите еще раз в аккаунт, пожалуйста!!!");
+                    signOut();
+                }
+                catchError(error);
+            });
+    };
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
@@ -32,17 +58,17 @@ export default function CalendarScreen({navigation}) {
                     login: login
                 },
             })
-                .then(response => {
-                    setData(response.data == null ? [] : response.data);
-                    if (value) getTasks();
-                })
-                .catch(function (error) {
-                    if (error.response.status === 401) {
-                        alert("Войдите еще раз в аккаунт, пожалуйста!!!");
-                        signOut();
-                    }
-                    catchError(error);
-                });
+            .then(response => {
+                setData(response.data == null ? [] : response.data);
+                if (value) getTasks();
+            })
+            .catch(function (error) {
+                if (error.response.status === 401) {
+                    alert("Войдите еще раз в аккаунт, пожалуйста!!!");
+                    signOut();
+                }
+                catchError(error);
+            });
         };
         const willFocusSubscription = navigation.addListener('focus', () => {
             bootstrapAsync();
@@ -65,22 +91,22 @@ export default function CalendarScreen({navigation}) {
                 selectedDate: selectedDate
             },
         })
-            .then(response => {
-                setTasks(response.data == null ? [] : response.data);
-            })
-            .catch(function (error) {
-                if (error.response.status === 401) {
-                    alert("Войдите еще раз в аккаунт, пожалуйста!!!");
-                    signOut();
-                }
-                catchError(error);
-            });
+        .then(response => {
+            setTasks(response.data == null ? [] : response.data);
+        })
+        .catch(function (error) {
+            if (error.response.status === 401) {
+                alert("Войдите еще раз в аккаунт, пожалуйста!!!");
+                signOut();
+            }
+            catchError(error);
+        });
     };
 
     return (
         <View style={styles.container}>
             <Dropdown
-                style={[styless.dropdown, isFocus && {borderColor: 'blue'}]}
+                style={[styless.dropdown, isFocus && { borderColor: 'blue' }]}
                 placeholderStyle={styless.placeholderStyle}
                 selectedTextStyle={styless.selectedTextStyle}
                 inputSearchStyle={styless.inputSearchStyle}
@@ -90,7 +116,7 @@ export default function CalendarScreen({navigation}) {
                 maxHeight={300}
                 labelField="name"
                 valueField="id"
-                placeholder={!isFocus ? 'Выберите проект' : '...'}
+                placeholder={!isFocus ? projectText : '...'}
                 searchPlaceholder="Поиск..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
@@ -153,7 +179,7 @@ export default function CalendarScreen({navigation}) {
                         });
                 }}
                 scrollable
-                style={{height: 90, paddingTop: 10, paddingBottom: 10}}
+                style={{height:90, paddingTop: 10, paddingBottom: 10}}
                 calendarColor={'white'}
                 calendarHeaderStyle={{color: 'black'}}
                 dateNumberStyle={{color: 'black'}}
@@ -179,25 +205,31 @@ export default function CalendarScreen({navigation}) {
                     }
                 }}
             />
-            <ScrollView style={tw`bg-white dark:bg-gray-900`}>
-                {tasks.map((item) =>
-                    <Pressable key={item.id} style={({pressed}) => [
+            <ScrollView style={tw`bg-white dark:bg-gray-900`}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={getData}
+                            />
+                        }>
+                {tasks.length > 0 ? tasks.map((item) =>
+                    <Pressable key={item.id} style={({ pressed }) => [
                         pressed ? style.buttonPressIn : taskStyle
                     ]} onPress={() => navigation.navigate('Задача', {
-                        item: item,
-                    })}>
+                            item: item,
+                        })}>
                         <Text style={[t.textWhite, t.fontMedium]}>Задача №{item.id}</Text>
-                        <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>{item.name}</Text>
+                        <Text style={[t.textWhite, t.textCenter, t.fontMedium, t.text2xl]}>{item.name}</Text>
                         <Text style={[t.textWhite, t.fontMedium]}>Крайний срок {item.deadline}</Text>
                     </Pressable>
-                )}
+                ) : <View style={tw`items-center justify-center`}><Text style={[t.fontMedium, t.mT20]}>Задач нет</Text></View>}
             </ScrollView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {flex: 1}
+    container: { flex: 1 }
 });
 
 const styless = StyleSheet.create({
