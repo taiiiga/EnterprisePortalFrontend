@@ -1,15 +1,14 @@
-import {TextInput, View, Text, Button, Pressable} from "react-native";
+import {Pressable, Text, TextInput, View} from "react-native";
 import React from "react";
 import {AuthContext} from "../../App";
 import {t} from "react-native-tailwindcss";
-import tw, {useAppColorScheme} from "twrnc";
+import tw from "twrnc";
 import {recoverPassword} from "../services/recoverPassword";
-import { AsyncStorage } from 'react-native';
 
 export default function SignInScreen() {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const { signIn } = React.useContext(AuthContext);
+    const {signIn} = React.useContext(AuthContext);
 
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
 
@@ -21,7 +20,7 @@ export default function SignInScreen() {
                 </Text>
             </View>
             <TextInput
-                style={tw`w-full py-2 items-center, rounded mt-6 border dark:text-white p-2 text-xl dark:border-white`}
+                style={tw`w-full py-2 items-center rounded mt-6 border dark:text-white p-2 text-xl dark:border-white`}
                 placeholder="Ваш логин"
                 value={username}
                 placeholderTextColor="gray"
@@ -29,7 +28,7 @@ export default function SignInScreen() {
                 onChangeText={setUsername}
             />
             <TextInput
-                style={tw`w-full py-2 items-center, rounded mt-6 border dark:text-white p-2 text-xl dark:border-white`}
+                style={tw`w-full py-2 items-center rounded mt-6 border dark:text-white p-2 text-xl dark:border-white`}
                 placeholder="Ваш пароль"
                 value={password}
                 onChangeText={setPassword}
@@ -37,13 +36,14 @@ export default function SignInScreen() {
                 secureTextEntry
             />
             <Pressable style={buttonStyle}
-                       onPress={() => signIn({ username, password })}
+                       onPress={() => signIn({username, password})}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}
                        onPressOut={() => setButtonStyle(style.buttonPressOut)}
-                       >
+            >
                 <Text style={[t.textWhite, t.fontMedium, t.text2xl]} autoFocus={true}>Войти</Text>
             </Pressable>
-            <Text style={tw`underline mt-6 dark:text-white text-center`} onPress={() => recoverPassword({ email })}>Восстановить пароль</Text>
+            <Text style={tw`underline mt-6 dark:text-white text-center`} onPress={() => recoverPassword({email})}>Восстановить
+                пароль</Text>
         </View>
     );
 }

@@ -34,6 +34,7 @@
     "react-native-calendars": "^1.1284.0",
     "react-native-date-picker": "^4.2.2",
     "react-native-datepicker": "^1.7.2",
+    "react-native-dialog": "^9.2.2",
     "react-native-eject": "^0.1.2",
     "react-native-element-dropdown": "^1.8.13",
     "react-native-elements": "^3.4.2",
