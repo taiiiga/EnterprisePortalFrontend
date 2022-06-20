@@ -88,7 +88,7 @@ export default function ProblemReadScreen({route, navigation}) {
             "id": id
         })
     };
-    const remove = async (id) => {
+    const remove = async () => {
         await axios.delete(apiUrl + item + "/Delete",
             {
                 headers: {
