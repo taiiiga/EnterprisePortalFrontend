@@ -1,4 +1,4 @@
-import {View, StyleSheet, Text, Pressable, ScrollView, ImageBackground} from 'react-native';
+import {View, StyleSheet, Text, Pressable, ScrollView, ImageBackground, RefreshControl} from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import {t} from "react-native-tailwindcss";
 import tw from "twrnc";
@@ -19,6 +19,32 @@ export default function CalendarScreen({navigation}) {
     const [data, setData] =  React.useState([]);
     const [tasks, setTasks] =  React.useState([]);
     const [selectedDate, setSelectedDate] =  React.useState(new Date());
+    const [projectText, setProjectText] =  React.useState('Выберите проект');
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const getData = async () => {
+        const login = await SecureStore.getItemAsync("login");
+        await axios.get(apiUrl + "Account/GetProjects", {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            params: {
+                login: login
+            },
+        })
+            .then(response => {
+                setData(response.data == null ? [] : response.data);
+                if (value) getTasks();
+            })
+            .catch(function (error) {
+                if (error.response.status === 401) {
+                    alert("Войдите еще раз в аккаунт, пожалуйста!!!");
+                    signOut();
+                }
+                catchError(error);
+            });
+    };
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
@@ -90,7 +116,7 @@ export default function CalendarScreen({navigation}) {
                 maxHeight={300}
                 labelField="name"
                 valueField="id"
-                placeholder={!isFocus ? 'Выберите проект' : '...'}
+                placeholder={!isFocus ? projectText : '...'}
                 searchPlaceholder="Поиск..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
@@ -179,8 +205,14 @@ export default function CalendarScreen({navigation}) {
                     }
                 }}
             />
-            <ScrollView style={tw`bg-white dark:bg-gray-900`}>
-                {tasks.map((item) =>
+            <ScrollView style={tw`bg-white dark:bg-gray-900`}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={getData}
+                            />
+                        }>
+                {tasks.length > 0 ? tasks.map((item) =>
                     <Pressable key={item.id} style={({ pressed }) => [
                         pressed ? style.buttonPressIn : taskStyle
                     ]} onPress={() => navigation.navigate('Задача', {
@@ -190,7 +222,7 @@ export default function CalendarScreen({navigation}) {
                         <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>{item.name}</Text>
                         <Text style={[t.textWhite, t.fontMedium]}>Крайний срок {item.deadline}</Text>
                     </Pressable>
-                )}
+                ) : <View style={tw`items-center justify-center`}><Text style={[t.fontMedium, t.mT20]}>Задач нет</Text></View>}
             </ScrollView>
         </View>
     );

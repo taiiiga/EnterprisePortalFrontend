@@ -25,6 +25,8 @@ export const EditProfileScreen = ({navigation}) => {
     const [email, setEmail] = React.useState("");
     const [phone, setPhone] = React.useState("");
     const [image, setImage] = React.useState(null);
+    const [workTimeBegin, setWorkTimeBegin] = React.useState(new Date());
+    const [workTimeEnd, setWorkTimeEnd] = React.useState(new Date());
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -45,6 +47,16 @@ export const EditProfileScreen = ({navigation}) => {
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || dateOfBirth;
         setDateOfBirth(currentDate);
+    };
+
+    const onChangeBegin = (event, selectedDate) => {
+        const currentDate = selectedDate || dateOfBirth;
+        setWorkTimeBegin(currentDate);
+    };
+
+    const onChangeEnd = (event, selectedDate) => {
+        const currentDate = selectedDate || dateOfBirth;
+        setWorkTimeEnd(currentDate);
     };
 
     const data = [
@@ -77,6 +89,8 @@ export const EditProfileScreen = ({navigation}) => {
                 setPhone(person.phone);
                 setEmail(person.email);
                 setTelegram(person.telegram);
+                setWorkTimeBegin(new Date(person.workTimeBegin));
+                setWorkTimeEnd(new Date(person.workTimeEnd));
             })
             .catch(function (error) {
                 if (error.response.status === 401) {
@@ -99,8 +113,17 @@ export const EditProfileScreen = ({navigation}) => {
             name: "imagename.jpg",
         });
         */
-        const login = await SecureStore.getItemAsync("login");
-        await axios.post(apiUrl + "Account/Update", {
+
+
+        /*{
+            id: 0,
+            avatar: "string",
+            fullName: "string",
+            groupName: "string",
+            projectName: "string",
+            positionName: "string",
+            workTypeName: "string",
+            workTime: "string",
             login: login,
             firstName: firstName,
             secondName: secondName,
@@ -110,7 +133,36 @@ export const EditProfileScreen = ({navigation}) => {
             phone: phone,
             email: email,
             telegram: telegram
-        }, {
+        }*/
+
+        const login = await SecureStore.getItemAsync("login");
+        if (workTimeBegin > workTimeEnd) {
+            alert("Время начала работы больше окончания!");
+            return;
+        }
+        const da = {
+            "id": 0,
+            "role": "string",
+            "login": login,
+            "avatar": "string",
+            "fullName": "string",
+            "firstName": firstName,
+            "secondName": secondName,
+            "fatherName": fatherName,
+            "groupName": "string",
+            "projectName": "string",
+            "positionName": "string",
+            "workTypeName": "string",
+            "sex": sex ? "Мужской" : "Женский",
+            "dateOfBirth": dateOfBirth,
+            "phone": phone,
+            "email": email,
+            "telegram": telegram,
+            "workTime": "string",
+            "workTimeBegin": workTimeBegin.toLocaleString(),
+            "workTimeEnd": workTimeEnd.toLocaleString(),
+        }
+        await axios.post(apiUrl + "Account/Update", da, {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
@@ -120,6 +172,7 @@ export const EditProfileScreen = ({navigation}) => {
             navigation.goBack();
         })
         .catch(function (error) {
+            alert(error.response);
             catchError(error);
         });
     };
@@ -197,6 +250,20 @@ export const EditProfileScreen = ({navigation}) => {
                 placeholder="@ivan"
                 placeholderTextColor={'gray'}
             />
+            <Text style={tw`mt-2 font-bold mb-1`}>Время начала работы</Text>
+            <DateTimePicker
+                style={tw`h-10 w-full`}
+                value={ workTimeBegin }
+                mode='time'
+                display='clock'
+                onChange={onChangeBegin} />
+            <Text style={tw`mt-2 font-bold mb-1`}>Время конца работы</Text>
+            <DateTimePicker
+                style={tw`h-10 w-full`}
+                value={ workTimeEnd }
+                mode='time'
+                display='clock'
+                onChange={onChangeEnd} />
             <Pressable style={style.button} onPress={() => saveUser()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>
                 <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Сохранить</Text>

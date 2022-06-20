@@ -69,6 +69,7 @@ export default function App({ navigation }) {
                     const admin = response.data.admin;
                     SecureStore.setItemAsync("userToken", token);
                     SecureStore.setItemAsync("login", login);
+                    SecureStore.setItemAsync("admin", admin);
                     AsyncStorage.setItem('login', login);
                     dispatch({ type: 'SIGN_IN', token: token, admin: admin });
                 })
