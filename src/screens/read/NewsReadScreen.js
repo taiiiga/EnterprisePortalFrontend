@@ -8,7 +8,7 @@ import {catchError} from "../../constans";
 import {Button, Icon} from "react-native-elements";
 
 
-export default function NewsTypeReadScreen({route, navigation}) {
+export default function NewsReadScreen({route, navigation}) {
     const {item, id} = route.params;
     const [model, setModel] = React.useState([]);
     const removeAlert = () =>

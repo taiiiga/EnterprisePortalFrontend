@@ -50,12 +50,12 @@ export const EditProfileScreen = ({navigation}) => {
     };
 
     const onChangeBegin = (event, selectedDate) => {
-        const currentDate = selectedDate || dateOfBirth;
+        const currentDate = selectedDate || workTimeBegin;
         setWorkTimeBegin(currentDate);
     };
 
     const onChangeEnd = (event, selectedDate) => {
-        const currentDate = selectedDate || dateOfBirth;
+        const currentDate = selectedDate || workTimeEnd;
         setWorkTimeEnd(currentDate);
     };
 

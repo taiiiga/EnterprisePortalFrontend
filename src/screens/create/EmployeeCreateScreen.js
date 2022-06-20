@@ -1,14 +1,13 @@
-import {Alert, FlatList, ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
+import {Pressable, ScrollView, StyleSheet, Text, TextInput} from "react-native";
 import React from "react";
 import {t} from "react-native-tailwindcss";
 import tw from 'twrnc';
 import axios from "axios";
 import {apiUrl} from "../../networking/ListOfUrl";
 import {catchError} from "../../constans";
-import {Button, Icon} from "react-native-elements";
 import {Dropdown} from "react-native-element-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import * as SecureStore from "expo-secure-store";
+import * as ImagePicker from "expo-image-picker";
 
 
 export default function EmployeeCreateScreen({route, navigation}) {
@@ -24,17 +23,64 @@ export default function EmployeeCreateScreen({route, navigation}) {
     const [email, setEmail] = React.useState("");
     const [phone, setPhone] = React.useState("");
     const [image, setImage] = React.useState(null);
+    const [workTimeBegin, setWorkTimeBegin] = React.useState(new Date());
+    const [workTimeEnd, setWorkTimeEnd] = React.useState(new Date());
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            setImage(result.uri);
+        }
+    };
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || dateOfBirth;
+        setDateOfBirth(currentDate);
+    };
+
+    const onChangeBegin = (event, selectedDate) => {
+        const currentDate = selectedDate || workTimeBegin;
+        setWorkTimeBegin(currentDate);
+    };
+
+    const onChangeEnd = (event, selectedDate) => {
+        const currentDate = selectedDate || workTimeEnd;
+        setWorkTimeEnd(currentDate);
+    };
+
+    const data = [
+        { label: 'Мужской', value: true },
+        { label: 'Женский', value: false },
+    ];
     const save = async () => {
         await axios.post(apiUrl + item + "/Create", {
-            login: login,
-            firstName: firstName,
-            secondName: secondName,
-            fatherName: fatherName,
-            sex: sex,
-            dateOfBirth: dateOfBirth,
-            phone: phone,
-            email: email,
-            telegram: telegram
+            "role": "string",
+            "login": login,
+            "avatar": "string",
+            "fullName": "string",
+            "firstName": firstName,
+            "secondName": secondName,
+            "fatherName": fatherName,
+            "groupName": "string",
+            "projectName": "string",
+            "positionName": "string",
+            "workTypeName": "string",
+            "sex": sex ? "Мужской" : "Женский",
+            "dateOfBirth": dateOfBirth,
+            "phone": phone,
+            "email": email,
+            "telegram": telegram,
+            "workTime": "string",
+            "workTimeBegin": workTimeBegin.toLocaleString(),
+            "workTimeEnd": workTimeEnd.toLocaleString(),
         }, {
             headers: {
                 "Accept": "application/json",
@@ -55,6 +101,7 @@ export default function EmployeeCreateScreen({route, navigation}) {
             <TextInput
                 style={styles.input}
                 onChangeText={setFirstName}
+                value={firstName}
                 placeholder="Иван"
                 placeholderTextColor={'gray'}
             />
@@ -62,6 +109,7 @@ export default function EmployeeCreateScreen({route, navigation}) {
             <TextInput
                 style={styles.input}
                 onChangeText={setSecondName}
+                value={secondName}
                 placeholder="Иванов"
                 placeholderTextColor={'gray'}
             />
@@ -69,17 +117,19 @@ export default function EmployeeCreateScreen({route, navigation}) {
             <TextInput
                 style={styles.input}
                 onChangeText={setFatherName}
+                value={fatherName}
                 placeholder="Иванович"
                 placeholderTextColor={'gray'}
             />
             <Text style={tw`mt-2 font-bold mb-1`}>Пол</Text>
             <Dropdown
-                style={[styles.dropdown, isFocus && {borderColor: 'blue'}, styles.input]}
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }, styles.input]}
                 data={data}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
                 placeholder={!isFocus ? 'Выберите пол' : '...'}
+                value={sex}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
@@ -90,13 +140,15 @@ export default function EmployeeCreateScreen({route, navigation}) {
             <Text style={tw`mt-2 font-bold mb-1`}>Дата рождения</Text>
             <DateTimePicker
                 style={tw`h-10 w-full`}
+                value={ dateOfBirth }
                 mode='date'
                 display='calendar'
-                onChange={onChange}/>
+                onChange={onChange} />
             <Text style={tw`mt-2 font-bold mb-1`}>Мобильный телефон</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={setPhone}
+                value={phone}
                 placeholder="Иванович"
                 placeholderTextColor={'gray'}
             />
@@ -104,6 +156,7 @@ export default function EmployeeCreateScreen({route, navigation}) {
             <TextInput
                 style={styles.input}
                 onChangeText={setEmail}
+                value={email}
                 placeholder="mail@mail.com"
                 placeholderTextColor={'gray'}
             />
@@ -111,9 +164,24 @@ export default function EmployeeCreateScreen({route, navigation}) {
             <TextInput
                 style={styles.input}
                 onChangeText={setTelegram}
+                value={telegram}
                 placeholder="@ivan"
                 placeholderTextColor={'gray'}
             />
+            <Text style={tw`mt-2 font-bold mb-1`}>Время начала работы</Text>
+            <DateTimePicker
+                style={tw`h-10 w-full`}
+                value={ workTimeBegin }
+                mode='time'
+                display='clock'
+                onChange={onChangeBegin} />
+            <Text style={tw`mt-2 font-bold mb-1`}>Время конца работы</Text>
+            <DateTimePicker
+                style={tw`h-10 w-full`}
+                value={ workTimeEnd }
+                mode='time'
+                display='clock'
+                onChange={onChangeEnd} />
             <Pressable style={buttonStyle} onPress={() => save()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>
                 <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Сохранить</Text>

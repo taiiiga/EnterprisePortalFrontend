@@ -35,6 +35,9 @@ import PositionCreateScreen from "../screens/create/PositionCreateScreen";
 import PositionEditScreen from "../screens/update/PositionEditScreen";
 import TypesOfWorkCreateScreen from "../screens/create/TypesOfWorkCreateScreen";
 import TypesOfWorkEditScreen from "../screens/update/TypesOfWorkEditScreen";
+import NewsCreateScreen from "../screens/create/NewsCreateScreen";
+import NewsEditScreen from "../screens/update/NewsEditScreen";
+import NewsReadScreen from "../screens/read/NewsReadScreen";
 
 const Stack = createStackNavigator();
 
@@ -64,6 +67,9 @@ export const AdminStackScreen = () => {
             <Stack.Screen name="Создание NewsType" component={NewsTypeCreateScreen} />
             <Stack.Screen name="Изменение NewsType" component={NewsTypeEditScreen} />
             <Stack.Screen name="Просмотр NewsType" component={NewsTypeReadScreen} />
+            <Stack.Screen name="Создание News" component={NewsCreateScreen} />
+            <Stack.Screen name="Изменение News" component={NewsEditScreen} />
+            <Stack.Screen name="Просмотр News" component={NewsReadScreen} />
             <Stack.Screen name="Создание Request" component={RequestCreateScreen} />
             <Stack.Screen name="Изменение Request" component={RequestEditScreen} />
             <Stack.Screen name="Просмотр Request" component={RequestReadScreen} />

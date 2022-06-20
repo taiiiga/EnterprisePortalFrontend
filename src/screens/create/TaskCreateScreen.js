@@ -42,6 +42,12 @@ export default function TaskCreateScreen({route, navigation}) {
             });
     };
 
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || deadLine;
+        setDeadLine(currentDate);
+    };
+
+
     return (
         <ScrollView style={tw`h-full w-full bg-white p-5`}>
             <Text style={tw`mt-2 font-bold mb-1`}>Название</Text>
@@ -82,8 +88,9 @@ export default function TaskCreateScreen({route, navigation}) {
             <Text style={tw`mt-2 font-bold mb-1`}>Дедлайн</Text>
             <DateTimePicker
                 style={tw`h-10 w-full`}
-                mode='date'
-                display='calendar'
+                value={deadLine}
+                mode='time'
+                display='clock'
                 onChange={onChange}/>
             <Pressable style={buttonStyle} onPress={() => save()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>

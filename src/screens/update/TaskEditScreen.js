@@ -31,7 +31,7 @@ export default function TaskEditScreen({route, navigation}) {
                     setProjectId(model.projectId);
                     setText(model.text);
                     setTaskTypeId(model.taskTypeId);
-                    setDeadLine(model.deadLine);
+                    setDeadLine(new Date(model.deadLine));
                 })
                 .catch(function (error) {
                     catchError(error);
@@ -67,6 +67,11 @@ export default function TaskEditScreen({route, navigation}) {
             .catch(function (error) {
                 catchError(error);
             });
+    };
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || deadLine;
+        setDeadLine(currentDate);
     };
 
     return (
@@ -115,8 +120,8 @@ export default function TaskEditScreen({route, navigation}) {
             <DateTimePicker
                 style={tw`h-10 w-full`}
                 value={deadLine}
-                mode='date'
-                display='calendar'
+                mode='time'
+                display='clock'
                 onChange={onChange}/>
             <Pressable style={buttonStyle} onPress={() => save()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>
