@@ -25,7 +25,7 @@ export default function ProblemEditScreen({route, navigation}) {
             })
                 .then(response => {
                     const model = response.data
-                    setName(model.name);
+                    setText(model.text);
                 })
                 .catch(function (error) {
                     catchError(error);

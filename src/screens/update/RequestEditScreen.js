@@ -25,7 +25,9 @@ export default function RequestEditScreen({route, navigation}) {
             })
                 .then(response => {
                     const model = response.data
-                    setName(model.name);
+                    setEmployeeId(model.employeeId);
+                    setCommentary(model.commentary);
+                    setProblemId(model.problemId);
                 })
                 .catch(function (error) {
                     catchError(error);

@@ -14,10 +14,20 @@ import * as SecureStore from "expo-secure-store";
 export default function TaskCreateScreen({route, navigation}) {
     const {item} = route.params;
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
+    const [employeeId, setEmployeeId] = React.useState("");
+    const [projectId, setProjectId] = React.useState("");
     const [name, setName] = React.useState("");
+    const [text, setText] = React.useState("");
+    const [taskTypeId, setTaskTypeId] = React.useState("");
+    const [deadLine, setDeadLine] = React.useState(new Date());
     const save = async () => {
         await axios.post(apiUrl + item + "/Create", {
-            name: name
+            name: name,
+            employeeId: employeeId,
+            projectId: projectId,
+            text: text,
+            taskTypeId: taskTypeId,
+            deadline: deadLine
         }, {
             headers: {
                 "Accept": "application/json",
@@ -38,9 +48,43 @@ export default function TaskCreateScreen({route, navigation}) {
             <TextInput
                 style={styles.input}
                 onChangeText={setName}
-                placeholder="Сотрудник"
+                placeholder="Задача"
                 placeholderTextColor={'gray'}
             />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID сотрудника</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setEmployeeId}
+                placeholder="5"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID проекта</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setProjectId}
+                placeholder="4"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Содержание</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setText}
+                placeholder="Текст"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID типа задачи</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setTaskTypeId}
+                placeholder="1"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Дедлайн</Text>
+            <DateTimePicker
+                style={tw`h-10 w-full`}
+                mode='date'
+                display='calendar'
+                onChange={onChange}/>
             <Pressable style={buttonStyle} onPress={() => save()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>
                 <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Сохранить</Text>

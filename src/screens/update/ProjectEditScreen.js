@@ -26,6 +26,9 @@ export default function ProjectEditScreen({route, navigation}) {
                 .then(response => {
                     const model = response.data
                     setName(model.name);
+                    setManagerId(model.managerId)
+                    setPurpose(model.purpose)
+                    setDepartmentId(model.departmentId)
                 })
                 .catch(function (error) {
                     catchError(error);
@@ -35,10 +38,16 @@ export default function ProjectEditScreen({route, navigation}) {
     }, []);
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
     const [name, setName] = React.useState("");
+    const [managerId, setManagerId] = React.useState("");
+    const [purpose, setPurpose] = React.useState("");
+    const [departmentId, setDepartmentId] = React.useState("");
     const save = async () => {
         await axios.post(apiUrl + item + "/Update", {
             id: id,
-            name: name
+            name: name,
+            managerId: managerId,
+            purpose: purpose,
+            departmentId: departmentId
         }, {
             headers: {
                 "Accept": "application/json",
@@ -56,11 +65,36 @@ export default function ProjectEditScreen({route, navigation}) {
     return (
         <ScrollView style={tw`h-full w-full bg-white p-5`}>
             <Text style={tw`mt-2 font-bold mb-1`}>Название</Text>
+            <Text style={tw`mt-2 font-bold mb-1`}>Название</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={setName}
                 value={name}
-                placeholder="Сотрудник"
+                placeholder="Проект"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID менеджера</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setManagerId}
+                value={managerId}
+                placeholder="5"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Цель</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setPurpose}
+                value={purpose}
+                placeholder="Цель"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID департамента</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setDepartmentId}
+                value={departmentId}
+                placeholder="Отдел по продаже"
                 placeholderTextColor={'gray'}
             />
             <Pressable style={buttonStyle} onPress={() => save()}

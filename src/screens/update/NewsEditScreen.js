@@ -25,7 +25,12 @@ export default function NewsEditScreen({route, navigation}) {
             })
                 .then(response => {
                     const model = response.data
-                    setName(model.name);
+                    setAuthorId(model.authorId)
+                    setText(model.text)
+                    setHeader(model.header)
+                    setImage(model.image)
+                    setDate(model.date)
+                    setNewsTypeId(model.newsTypeId)
                 })
                 .catch(function (error) {
                     catchError(error);

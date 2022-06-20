@@ -15,9 +15,15 @@ export default function ProjectCreateScreen({route, navigation}) {
     const {item} = route.params;
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
     const [name, setName] = React.useState("");
+    const [managerId, setManagerId] = React.useState("");
+    const [purpose, setPurpose] = React.useState("");
+    const [departmentId, setDepartmentId] = React.useState("");
     const save = async () => {
         await axios.post(apiUrl + item + "/Create", {
-            name: name
+            name: name,
+            managerId: managerId,
+            purpose: purpose,
+            departmentId: departmentId
         }, {
             headers: {
                 "Accept": "application/json",
@@ -38,7 +44,28 @@ export default function ProjectCreateScreen({route, navigation}) {
             <TextInput
                 style={styles.input}
                 onChangeText={setName}
-                placeholder="Сотрудник"
+                placeholder="Проект"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID менеджера</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setManagerId}
+                placeholder="5"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Цель</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setPurpose}
+                placeholder="Цель"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID департамента</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setDepartmentId}
+                placeholder="Отдел по продаже"
                 placeholderTextColor={'gray'}
             />
             <Pressable style={buttonStyle} onPress={() => save()}

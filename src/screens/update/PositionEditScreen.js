@@ -26,6 +26,7 @@ export default function PositionEditScreen({route, navigation}) {
                 .then(response => {
                     const model = response.data
                     setName(model.name);
+                    setResponsibilities(model.responsibilities)
                 })
                 .catch(function (error) {
                     catchError(error);

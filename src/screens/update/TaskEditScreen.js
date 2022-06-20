@@ -6,6 +6,7 @@ import axios from "axios";
 import {apiUrl} from "../../networking/ListOfUrl";
 import {catchError} from "../../constans";
 import {Button, Icon} from "react-native-elements";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 
 export default function TaskEditScreen({route, navigation}) {
@@ -26,6 +27,11 @@ export default function TaskEditScreen({route, navigation}) {
                 .then(response => {
                     const model = response.data
                     setName(model.name);
+                    setEmployeeId(model.employeeId);
+                    setProjectId(model.projectId);
+                    setText(model.text);
+                    setTaskTypeId(model.taskTypeId);
+                    setDeadLine(model.deadLine);
                 })
                 .catch(function (error) {
                     catchError(error);
@@ -34,11 +40,21 @@ export default function TaskEditScreen({route, navigation}) {
         bootstrapAsync();
     }, []);
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
+    const [employeeId, setEmployeeId] = React.useState("");
+    const [projectId, setProjectId] = React.useState("");
     const [name, setName] = React.useState("");
+    const [text, setText] = React.useState("");
+    const [taskTypeId, setTaskTypeId] = React.useState("");
+    const [deadLine, setDeadLine] = React.useState(new Date());
     const save = async () => {
         await axios.post(apiUrl + item + "/Update", {
             id: id,
-            name: name
+            name: name,
+            employeeId: employeeId,
+            projectId: projectId,
+            text: text,
+            taskTypeId: taskTypeId,
+            deadline: deadLine
         }, {
             headers: {
                 "Accept": "application/json",
@@ -60,9 +76,48 @@ export default function TaskEditScreen({route, navigation}) {
                 style={styles.input}
                 onChangeText={setName}
                 value={name}
-                placeholder="Сотрудник"
+                placeholder="Задача"
                 placeholderTextColor={'gray'}
             />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID сотрудника</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setEmployeeId}
+                value={employeeId}
+                placeholder="5"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID проекта</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setProjectId}
+                value={projectId}
+                placeholder="4"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Содержание</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setText}
+                value={text}
+                placeholder="Текст"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>ID типа задачи</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setTaskTypeId}
+                value={taskTypeId}
+                placeholder="1"
+                placeholderTextColor={'gray'}
+            />
+            <Text style={tw`mt-2 font-bold mb-1`}>Дедлайн</Text>
+            <DateTimePicker
+                style={tw`h-10 w-full`}
+                value={deadLine}
+                mode='date'
+                display='calendar'
+                onChange={onChange}/>
             <Pressable style={buttonStyle} onPress={() => save()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>
                 <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Сохранить</Text>

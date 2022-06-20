@@ -26,6 +26,7 @@ export default function DepartmentEditScreen({route, navigation}) {
                 .then(response => {
                     const model = response.data
                     setName(model.name);
+                    setManagerId(model.managerId)
                 })
                 .catch(function (error) {
                     catchError(error);
