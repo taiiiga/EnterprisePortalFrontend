@@ -1,63 +1,13 @@
-import {
-    ActivityIndicator,
-    ImageBackground,
-    Pressable,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View
-} from "react-native";
+import {ActivityIndicator, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import React from "react";
 import tw  from 'twrnc';
 import {catchError} from "../constans";
 import axios from "axios";
 import {apiUrl} from "../networking/ListOfUrl";
-import {Button, Icon} from "react-native-elements";
-import * as SecureStore from "expo-secure-store";
 
 export default function HomeScreen({navigation}) {
     const [news, setNews] = React.useState([]);
     const [roleButtonStyle, setRoleButtonStyle] = React.useState(style.button);
-    const [refreshing, setRefreshing] = React.useState(false);
-
-    const getData = async () => {
-        await axios.get(apiUrl + "News/List", {
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-        })
-            .then(response => {
-                const sortArray = response.data;
-                setNews(sortArray);
-            })
-            .catch(function (error) {
-                catchError(error);
-            });
-    };
-
-    React.useLayoutEffect(async () => {
-        const admin = await SecureStore.getItemAsync("admin");
-        navigation.setOptions({
-            headerRight: () => {
-                admin == "Руководитель"
-                    ? (
-                <Button
-                    icon={
-                        <Icon
-                            name="edit"
-                            size={20}
-                            color="#5a67d8"
-                        />
-                    }
-                    type="clear"
-                    title=""
-                    onPress={() => navigation.navigate('Создать новость')}
-                />) : (<View></View>)
-            }
-        });
-    }, [navigation]);
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
@@ -67,13 +17,13 @@ export default function HomeScreen({navigation}) {
                     "Content-Type": "application/json"
                 },
             })
-            .then(response => {
-                const sortArray = response.data;
-                setNews(sortArray);
-            })
-            .catch(function (error) {
-                catchError(error);
-            });
+                .then(response => {
+                    const sortArray = response.data;
+                    setNews(sortArray);
+                })
+                .catch(function (error) {
+                    catchError(error);
+                });
         };
         const willFocusSubscription = navigation.addListener('focus', () => {
             bootstrapAsync();
@@ -93,36 +43,30 @@ export default function HomeScreen({navigation}) {
         );
     } else {
         return (
-            <ScrollView style={tw`bg-white dark:bg-gray-900`}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={getData}
-                            />
-                        }>
+            <ScrollView style={tw`bg-white dark:bg-gray-900`}>
                 <View style={tw`w-full h-full bg-white dark:bg-gray-900 px-4 flex flex-row flex-wrap`}>
                     {news
                         .sort((a, b) => new Date(b.date.split('.')[2], b.date.split('.')[1], b.date.split('.')[0]) - new Date(a.date.split('.')[2], a.date.split('.')[1], a.date.split('.')[0]))
                         .map((item) =>
-                        <View style={tw`mt-5 w-full`} key={item.id}>
-                            <Pressable style={tw`w-full h-10 pt-6 bg-slate-900 flex items-center flex justify-center`}
-                                       onPress={() => navigation.navigate('Новость', {
-                                           item: item,
-                                       })}
-                                       onPressIn={() => setRoleButtonStyle(style.buttonPressIn)}
-                                       onPressOut={() => setRoleButtonStyle(style.button)}>
-                                <Text style={[styles.text, tw`text-center text-white h-10`]}>{item.date}</Text>
-                            </Pressable>
-                            <Pressable style={tw`w-full h-30 p-5 bg-slate-800 flex items-center flex justify-center`}
-                                       onPress={() => navigation.navigate('Новость', {
-                                           item: item,
-                                       })}
-                                       onPressIn={() => setRoleButtonStyle(style.buttonPressIn)}
-                                       onPressOut={() => setRoleButtonStyle(style.button)}>
-                                <Text style={[styles.text, tw`text-center text-2xl text-white font-bold`]}>{item.header}</Text>
-                            </Pressable>
-                        </View>
-                    )}
+                            <View style={tw`mt-5 w-full`} key={item.id}>
+                                <Pressable style={tw`w-full h-10 pt-6 bg-slate-900 flex items-center flex justify-center`}
+                                           onPress={() => navigation.navigate('Новость', {
+                                               item: item,
+                                           })}
+                                           onPressIn={() => setRoleButtonStyle(style.buttonPressIn)}
+                                           onPressOut={() => setRoleButtonStyle(style.button)}>
+                                    <Text style={[styles.text, tw`text-center text-white h-10`]}>{item.date}</Text>
+                                </Pressable>
+                                <Pressable style={tw`w-full h-30 p-5 bg-slate-800 flex items-center flex justify-center`}
+                                           onPress={() => navigation.navigate('Новость', {
+                                               item: item,
+                                           })}
+                                           onPressIn={() => setRoleButtonStyle(style.buttonPressIn)}
+                                           onPressOut={() => setRoleButtonStyle(style.button)}>
+                                    <Text style={[styles.text, tw`text-center text-2xl text-white font-bold`]}>{item.header}</Text>
+                                </Pressable>
+                            </View>
+                        )}
                 </View>
             </ScrollView>
         );

@@ -16,9 +16,9 @@ import 'moment/locale/ru';
 import {TabNavigator} from "./src/navigation/TabNavigator";
 import {AsyncStorage, LogBox} from 'react-native';
 import {AdminStackScreen} from "./src/navigation/AdminStackNavigation";
-LogBox.ignoreLogs(['Warning: ...', 'Console Warning: ...']); // Ignore log notification by message
-LogBox.ignoreAllLogs(); //Ignore all log notifications
-export const AuthContext = React.createContext(undefined);
+//LogBox.ignoreLogs(['Warning: ...', 'Console Warning: ...']); // Ignore log notification by message
+///LogBox.ignoreAllLogs(); //Ignore all log notifications
+export const AuthContext = React.createContext();
 
 const Stack = createStackNavigator();
 
@@ -69,7 +69,6 @@ export default function App({ navigation }) {
                     SecureStore.setItemAsync("userToken", token);
                     SecureStore.setItemAsync("login", login);
                     SecureStore.setItemAsync("admin", admin);
-                    AsyncStorage.setItem('login', login);
                     dispatch({ type: 'SIGN_IN', token: token, admin: admin });
                 })
                 .catch(function (error) {
