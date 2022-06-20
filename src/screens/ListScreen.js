@@ -1,4 +1,4 @@
-import {FlatList, ImageBackground, Pressable, StyleSheet, Text, View} from "react-native";
+import {Alert, FlatList, ImageBackground, Pressable, StyleSheet, Text, View} from "react-native";
 import React from "react";
 import {t} from "react-native-tailwindcss";
 import tw from 'twrnc';
@@ -36,7 +36,7 @@ export default function ListScreen({route, navigation}) {
             <Pressable style={({pressed}) => [
                 pressed ? style.removeButtonPressIn : removeButtonStyle
             ]}
-                       onPress={() => remove(item.id)}>
+                       onPress={() => removeAlert(item.id)}>
                 <ImageBackground
                     source={{uri: "https://static.wikia.nocookie.net/baldi-fanon/images/7/7a/B889B0A9-4717-4D37-9ADD-AB7B5E11FAEF.png/revision/latest?cb=20190226222946"}}
                     resizeMode="contain"
@@ -47,6 +47,21 @@ export default function ListScreen({route, navigation}) {
 
     React.useEffect(() => refresh(), []);
 
+    const removeAlert = (id) =>
+        Alert.alert(
+            "Предупреждение",
+            "Вы уверены?",
+            [
+                {
+                    text: "Отмена",
+                    onPress: () => {
+                    },
+                    style: "cancel"
+                },
+                {text: "Да", onPress: () => remove(id)}
+            ],
+            {cancelable: true},
+        );
     const refresh = () => {
         const bootstrapAsync = async () => {
             await axios.get(apiUrl + model + "/List", {
