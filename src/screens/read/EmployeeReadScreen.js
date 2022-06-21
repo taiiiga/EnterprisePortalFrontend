@@ -22,14 +22,14 @@ export default function EmployeeReadScreen({route, navigation}) {
                     },
                     style: "cancel"
                 },
-                {text: "Да", onPress: () => remove}
+                {text: "Да", onPress: () => remove()}
             ],
             {cancelable: true},
         );
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
-            await axios.get(apiUrl + item + "/Get", {
+            await axios.get(apiUrl + item + "/GetById", {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
@@ -88,7 +88,7 @@ export default function EmployeeReadScreen({route, navigation}) {
             "id": id
         })
     };
-    const remove = async (id) => {
+    const remove = async () => {
         await axios.delete(apiUrl + item + "/Delete",
             {
                 headers: {
@@ -111,8 +111,18 @@ export default function EmployeeReadScreen({route, navigation}) {
     return (
         <View key={model.id} style={style.elements}>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID: {model.id}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>логин: {model.login}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>аватар: {model.avatar}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>имя: {model.fullName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>название группы: {model.groupName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>название проекта: {model.projectName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>позиция: {model.positionName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>работа: {model.workTypeName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>пол: {model.sex}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>дата рождения: {model.dateOfBirth}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>телефон: {model.phone}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>email: {model.email}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>telegram: {model.telegram}</Text>
         </View>
     );
 }

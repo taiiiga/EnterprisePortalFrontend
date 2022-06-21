@@ -1,19 +1,17 @@
+import {Pressable, ScrollView, StyleSheet, Text, TextInput} from "react-native";
 import React from "react";
-import {Avatar, Icon} from 'react-native-elements';
-import {View, Text, ScrollView, Pressable, TextInput, StyleSheet, Switch} from "react-native";
-import tw from "twrnc";
 import {t} from "react-native-tailwindcss";
-import {AuthContext} from "../../App";
-import * as SecureStore from "expo-secure-store";
+import tw from 'twrnc';
 import axios from "axios";
-import {apiUrl} from "../networking/ListOfUrl";
-import {catchError} from "../constans";
+import {apiUrl} from "../../networking/ListOfUrl";
+import {catchError} from "../../constans";
 import {Dropdown} from "react-native-element-dropdown";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Image, Platform } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import DateTimePicker from "@react-native-community/datetimepicker";
+import * as ImagePicker from "expo-image-picker";
 
-export const EditProfileScreen = ({navigation}) => {
+
+export default function EmployeeCreateScreen({route, navigation}) {
+    const {item} = route.params;
     const [buttonStyle, setButtonStyle] = React.useState(style.button);
     const [firstName, setFirstName] = React.useState("");
     const [secondName, setSecondName] = React.useState("");
@@ -27,7 +25,6 @@ export const EditProfileScreen = ({navigation}) => {
     const [image, setImage] = React.useState(null);
     const [workTimeBegin, setWorkTimeBegin] = React.useState(new Date());
     const [workTimeEnd, setWorkTimeEnd] = React.useState(new Date());
-
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -63,85 +60,8 @@ export const EditProfileScreen = ({navigation}) => {
         { label: 'Мужской', value: true },
         { label: 'Женский', value: false },
     ];
-
-    React.useEffect(() => {
-        const bootstrapAsync = async () => {
-            const token = await SecureStore.getItemAsync("userToken");
-            const login = await SecureStore.getItemAsync("login");
-            await axios.get(apiUrl + "Account/Get", {
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                params: {
-                    login: login
-                },
-            })
-            .then(response => {
-                const person = response.data;
-                setSecondName(person.fullName.split(' ')[0]);
-                setFirstName(person.fullName.split(' ')[1]);
-                setFatherName(person.fullName.split(' ')[2]);
-                setSex(person.sex === "Мужской");
-                const date = person.dateOfBirth.split('.');
-                setDateOfBirth(new Date(date[2], date[1], date[0]));
-                setPhone(person.phone);
-                setEmail(person.email);
-                setTelegram(person.telegram);
-                setWorkTimeBegin(new Date(person.workTimeBegin));
-                setWorkTimeEnd(new Date(person.workTimeEnd));
-            })
-            .catch(function (error) {
-                if (error.response.status === 401) {
-                    alert("Войдите еще раз в аккаунт, пожалуйста!");
-                }
-                catchError(error);
-            });
-        };
-
-        bootstrapAsync();
-    }, []);
-
-    const saveUser = async () => {
-        /*
-        const formData = new FormData();
-        formData.append();
-        formData.append('photo', {
-            uri: image,
-            type: 'image/jpeg',
-            name: "imagename.jpg",
-        });
-        */
-
-
-        /*{
-            id: 0,
-            avatar: "string",
-            fullName: "string",
-            groupName: "string",
-            projectName: "string",
-            positionName: "string",
-            workTypeName: "string",
-            workTime: "string",
-            login: login,
-            firstName: firstName,
-            secondName: secondName,
-            fatherName: fatherName,
-            sex: sex,
-            dateOfBirth: dateOfBirth,
-            phone: phone,
-            email: email,
-            telegram: telegram
-        }*/
-
-        const login = await SecureStore.getItemAsync("login");
-        if (workTimeBegin > workTimeEnd) {
-            alert("Время начала работы больше окончания!");
-            return;
-        }
-        const da = {
-            "id": 0,
+    const save = async () => {
+        await axios.post(apiUrl + item + "/Create", {
             "role": "string",
             "login": login,
             "avatar": "string",
@@ -161,20 +81,18 @@ export const EditProfileScreen = ({navigation}) => {
             "workTime": "string",
             "workTimeBegin": workTimeBegin.toLocaleString(),
             "workTimeEnd": workTimeEnd.toLocaleString(),
-        }
-        await axios.post(apiUrl + "Account/Update", da, {
+        }, {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             },
         })
-        .then(response => {
-            navigation.goBack();
-        })
-        .catch(function (error) {
-            alert(error.response);
-            catchError(error);
-        });
+            .then(response => {
+                navigation.goBack();
+            })
+            .catch(function (error) {
+                catchError(error);
+            });
     };
 
     return (
@@ -264,17 +182,17 @@ export const EditProfileScreen = ({navigation}) => {
                 mode='time'
                 display='clock'
                 onChange={onChangeEnd} />
-            <Pressable style={style.button} onPress={() => saveUser()}
+            <Pressable style={buttonStyle} onPress={() => save()}
                        onPressIn={() => setButtonStyle(style.buttonPressIn)}>
                 <Text style={[t.textWhite, t.fontMedium, t.text2xl]}>Сохранить</Text>
             </Pressable>
         </ScrollView>
     );
-};
+}
 
 const style = {
-    button: tw`w-full h-30 rounded bg-slate-800 items-center flex justify-center mt-5`,
-    buttonPressIn: tw`w-full h-30 rounded bg-emerald-400 items-center flex justify-center mt-5`
+    button: tw`w-full h-18 rounded bg-slate-800 items-center flex justify-center mt-5`,
+    buttonPressIn: tw`w-full h-18 rounded bg-emerald-400 items-center flex justify-center mt-5`
 }
 
 const styles = StyleSheet.create({
@@ -283,4 +201,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
     },
+    text: {
+        textShadowColor: 'rgba(0, 0, 0, 0.95)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 10
+    }
 });

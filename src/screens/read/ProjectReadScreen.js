@@ -22,7 +22,7 @@ export default function ProjectReadScreen({route, navigation}) {
                     },
                     style: "cancel"
                 },
-                {text: "Да", onPress: () => remove}
+                {text: "Да", onPress: () => remove()}
             ],
             {cancelable: true},
         );
@@ -88,7 +88,7 @@ export default function ProjectReadScreen({route, navigation}) {
             "id": id
         })
     };
-    const remove = async (id) => {
+    const remove = async () => {
         await axios.delete(apiUrl + item + "/Delete",
             {
                 headers: {
@@ -112,6 +112,9 @@ export default function ProjectReadScreen({route, navigation}) {
         <View key={model.id} style={style.elements}>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID: {model.id}</Text>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID менеджера: {model.managerId}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Имя менеджера: {model.managerName}</Text>
+            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Цель: {model.purpose}</Text>
         </View>
     );
 }

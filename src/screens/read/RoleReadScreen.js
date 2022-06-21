@@ -22,7 +22,7 @@ export default function RoleReadScreen({route, navigation}) {
                     },
                     style: "cancel"
                 },
-                {text: "Да", onPress: () => remove}
+                {text: "Да", onPress: () => remove()}
             ],
             {cancelable: true},
         );
@@ -88,7 +88,7 @@ export default function RoleReadScreen({route, navigation}) {
             "id": id
         })
     };
-    const remove = async (id) => {
+    const remove = async () => {
         await axios.delete(apiUrl + item + "/Delete",
             {
                 headers: {

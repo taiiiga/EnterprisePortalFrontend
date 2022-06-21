@@ -1,6 +1,8 @@
 export const Project = {
     modelName: 'Project',
     id,
-    principalId,
-    name
+    name,
+    managerId,
+    managerName,
+    purpose,
 }

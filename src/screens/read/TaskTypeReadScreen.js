@@ -8,7 +8,7 @@ import {catchError} from "../../constans";
 import {Button, Icon} from "react-native-elements";
 
 
-export default function DepartmentReadScreen({route, navigation}) {
+export default function TaskTypeReadScreen({route, navigation}) {
     const {item, id} = route.params;
     const [model, setModel] = React.useState([]);
     const removeAlert = () =>
@@ -112,8 +112,6 @@ export default function DepartmentReadScreen({route, navigation}) {
         <View key={model.id} style={style.elements}>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID: {model.id}</Text>
             <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Название: {model.name}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>ID менеджера: {model.managerId}</Text>
-            <Text style={[t.textWhite, t.fontMedium, t.textXl]}>Имя менеджера: {model.managerName}</Text>
         </View>
     );
 }

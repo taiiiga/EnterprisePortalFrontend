@@ -2,7 +2,15 @@ export const Person = {
     modelName: 'Person',
     id,
     login,
-    password,
+    avatar,
+    fullName,
+    groupName,
+    projectName,
+    positionName,
+    workTypeName,
+    sex,
+    dateOfBirth,
+    phone,
     email,
-    projectId
+    telegram,
 }
