@@ -40,7 +40,7 @@ export default function RequestEditScreen({route, navigation}) {
     const [problemId, setProblemId] = React.useState("");
     const [commentary, setCommentary] = React.useState("");
     const save = async () => {
-        await axios.post(apiUrl + item + "/Update", {
+        await axios.post(apiUrl + item + "/UpdateAdmin", {
             id: id,
             employeeId: employeeId,
             problemId: problemId,

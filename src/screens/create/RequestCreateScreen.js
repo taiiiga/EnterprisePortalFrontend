@@ -18,7 +18,7 @@ export default function RequestCreateScreen({route, navigation}) {
     const [problemId, setProblemId] = React.useState("");
     const [commentary, setCommentary] = React.useState("");
     const save = async () => {
-        await axios.post(apiUrl + item + "/Create", {
+        await axios.post(apiUrl + item + "/CreateAdmin", {
             employeeId: employeeId,
             problemId: problemId,
             commentary: commentary
